@@ -1,5 +1,5 @@
 @extends('admin.app')
-@section('title' , __('messages.add_new_tech'))
+@section('title' , __('messages.edit_tech'))
 @section('styles')
 
 @endsection
@@ -9,18 +9,20 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>{{ __('messages.add_new_tech') }}</h4>
+                        <h4>{{ __('messages.edit_tech') }}</h4>
                     </div>
                 </div>
                 <form method="post" enctype="multipart/form-data" action="">
                     @csrf
                     <div class="form-group mb-4">
                         <label for="title">{{ __('messages.tec_name_ar') }}</label>
-                        <input required type="text" name="title_ar" class="form-control" id="title_ar">
+                        <input required type="text" name="title_ar" value="{{$data->title_ar}}" class="form-control"
+                               id="title_ar">
                     </div>
                     <div class="form-group mb-4">
                         <label for="title">{{ __('messages.tec_name_en') }}</label>
-                        <input required type="text" name="title_en" class="form-control" id="title_en">
+                        <input required type="text" name="title_en" value="{{$data->title_ar}}" class="form-control"
+                               id="title_en">
                     </div>
                     <div class="form-group">
                         @php $cats = \App\Category::where('deleted',0)->orderBy('sort','asc')->get(); @endphp
@@ -28,24 +30,35 @@
                         <select required class="form-control" name="category_id" id="cmb_cat">
                             <option selected disabled>{{ __('messages.choose_category') }}</option>
                             @foreach ($cats as $row)
-                                @if( app()->getLocale() == 'en')
-                                    <option value="{{ $row->id }}">{{ $row->title_en }}</option>
+                                @if($data->category_id == $row->id)
+                                    @if( app()->getLocale() == 'en')
+                                        <option value="{{ $row->id }}" selected>{{ $row->title_en }}</option>
+                                    @else
+                                        <option value="{{ $row->id }}" selected>{{ $row->title_ar }}</option>
+                                    @endif
                                 @else
-                                    <option value="{{ $row->id }}">{{ $row->title_ar }}</option>
+                                    @if( app()->getLocale() == 'en')
+                                        <option value="{{ $row->id }}">{{ $row->title_en }}</option>
+                                    @else
+                                        <option value="{{ $row->id }}">{{ $row->title_ar }}</option>
+                                    @endif
                                 @endif
                             @endforeach
                         </select>
                     </div>
                     {{--                    // 1--}}
-                    <div class="form-group" id="sub_cat_cont" style="display:none;">
+                    <div class="form-group" id="sub_cat_cont">
                         @php $sub_cats = \App\SubCategory::where('deleted',0)->get(); @endphp
                         <label for="sel1">{{ __('messages.sub_category_first') }}</label>
                         <select class="form-control tagging" name="categories[]" id="cmb_sub_cat" multiple="multiple">
-                            @foreach ($sub_cats as $row)
+                            @foreach ($sub_cats as $key => $row)
+                                @php $exists_cat = \App\Product_category::where('product_id',$data->id)->where('cat_id',$row->id)->first(); @endphp
                                 @if( app()->getLocale() == 'en')
-                                    <option value="{{ $row->id }}">{{ $row->title_en }}</option>
+                                    <option value="{{ $row->id }}"
+                                            @if($exists_cat) selected @endif >{{ $row->title_en }}</option>
                                 @else
-                                    <option value="{{ $row->id }}">{{ $row->title_ar }}</option>
+                                    <option value="{{ $row->id }}"
+                                            @if($exists_cat) selected @endif>{{ $row->title_ar }}</option>
                                 @endif
                             @endforeach
                         </select>
@@ -56,10 +69,18 @@
                         <select required class="form-control" name="city_id" id="cmb_city_id">
                             <option selected disabled>{{ __('messages.choose_city') }}</option>
                             @foreach ($cities as $row)
-                                @if( app()->getLocale() == 'en')
-                                    <option value="{{ $row->id }}">{{ $row->title_en }}</option>
+                                @if($data->city_id == $row->id)
+                                    @if( app()->getLocale() == 'en')
+                                        <option value="{{ $row->id }}" selected>{{ $row->title_en }}</option>
+                                    @else
+                                        <option value="{{ $row->id }}" selected>{{ $row->title_ar }}</option>
+                                    @endif
                                 @else
-                                    <option value="{{ $row->id }}">{{ $row->title_ar }}</option>
+                                    @if( app()->getLocale() == 'en')
+                                        <option value="{{ $row->id }}">{{ $row->title_en }}</option>
+                                    @else
+                                        <option value="{{ $row->id }}">{{ $row->title_ar }}</option>
+                                    @endif
                                 @endif
                             @endforeach
                         </select>
@@ -77,7 +98,7 @@
                     <div class="form-group mb-4 arabic-direction">
                         <label for="description">{{ __('messages.product_description') }}</label>
                         <textarea required name="description_en"
-                                  class="form-control" id="description" rows="5"></textarea>
+                                  class="form-control" id="description" rows="5"> </textarea>
                     </div>
                     <div class="custom-file-container" data-upload-id="myFirstImage">
                         <label>{{ __('messages.upload') }} ({{ __('messages.single_image') }}) <a

@@ -8,7 +8,7 @@ class Product extends Model
 {
 
 //    protected $dates = ['publication_date'];
-    protected $fillable = ['title','description', 'price','category_id','sub_category_id','sub_category_two_id','expire_special_date',
+    protected $fillable = ['title_ar','title_en','description_ar','description_en', 'price','category_id','sub_category_id','sub_category_two_id','expire_special_date',
         'sub_category_three_id','sub_category_four_id','user_id', 'type','publication_date','re_post_date','is_special',
         'views', 'offer', 'status', 'expiry_date','main_image','expire_pin_date','created_at','plan_id','publish','pin',
         'sub_category_five_id','choose_it','city_id','area_id','latitude','longitude','share_location','deleted','retweet_date','retweet'];
@@ -41,6 +41,9 @@ class Product extends Model
     }
     public function Views() {
         return $this->hasMany('App\Product_view', 'product_id');
+    }
+    public function Categories() {
+        return $this->hasMany('App\Product_category', 'product_id');
     }
     public function City() {
         return $this->belongsTo('App\City', 'city_id');

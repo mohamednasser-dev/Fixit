@@ -67,7 +67,7 @@
                                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                                 </svg>
-                                <span>{{ __('messages.ads') }}
+                                <span>{{ __('messages.technicians') }}
                                     @if( $total_count> 0 )
                                         <span class="unreadcount">
                                         <span class="insidecount">
@@ -86,31 +86,34 @@
                             </div>
                         </a>
                         <ul class="collapse submenu list-unstyled" id="products" data-parent="#accordionExample">
+                            <li class="add">
+                                <a href="/admin-panel/products/add">{{ __('messages.add') }}</a>
+                            </li>
                             <li class="show">
                                 <a href="/admin-panel/products/show">{{ __('messages.show') }}</a>
                             </li>
-                            <li class="reports">
-                                <a href="/admin-panel/products/comments">{{ __('messages.reports') }}
-                                    @if( $reports_count> 0 )
-                                        <span class="unreadcount">
-                                        <span class="insidecount">
-                                            {{$reports_count}}
-                                        </span>
-                                    </span>
-                                    @endif
-                                </a>
-                            </li>
-                            <li class="comments">
-                                <a href="/admin-panel/products/comments">{{ __('messages.comments') }}
-                                    @if( $comments_count> 0 )
-                                        <span class="unreadcount">
-                                        <span class="insidecount">
-                                            {{$comments_count}}
-                                        </span>
-                                    </span>
-                                    @endif
-                                </a>
-                            </li>
+{{--                            <li class="reports">--}}
+{{--                                <a href="/admin-panel/products/comments">{{ __('messages.reports') }}--}}
+{{--                                    @if( $reports_count> 0 )--}}
+{{--                                        <span class="unreadcount">--}}
+{{--                                        <span class="insidecount">--}}
+{{--                                            {{$reports_count}}--}}
+{{--                                        </span>--}}
+{{--                                    </span>--}}
+{{--                                    @endif--}}
+{{--                                </a>--}}
+{{--                            </li>--}}
+{{--                            <li class="comments">--}}
+{{--                                <a href="/admin-panel/products/comments">{{ __('messages.comments') }}--}}
+{{--                                    @if( $comments_count> 0 )--}}
+{{--                                        <span class="unreadcount">--}}
+{{--                                        <span class="insidecount">--}}
+{{--                                            {{$comments_count}}--}}
+{{--                                        </span>--}}
+{{--                                    </span>--}}
+{{--                                    @endif--}}
+{{--                                </a>--}}
+{{--                            </li>--}}
                         </ul>
                     </li>
                 @endif
@@ -204,26 +207,26 @@
                         </a>
                     </li>
                 @endif
-                @if(in_array(18 , Auth::user()->custom['admin_permission']))
-                    <li class="menu account_types">
-                        <a href="/admin-panel/account_types" class="dropdown-toggle first-link">
-                            <div class="">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-                                <span>{{ __('messages.ecomercial_account_types') }}</span>
-                            </div>
-                        </a>
-                    </li>
-                @endif
-                @if(in_array(17 , Auth::user()->custom['admin_permission']))
-                    <li class="menu specialty">
-                        <a href="/admin-panel/specialty" class="dropdown-toggle first-link">
-                            <div class="">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
-                                <span>{{ __('messages.specialties') }}</span>
-                            </div>
-                        </a>
-                    </li>
-                @endif
+{{--                @if(in_array(18 , Auth::user()->custom['admin_permission']))--}}
+{{--                    <li class="menu account_types">--}}
+{{--                        <a href="/admin-panel/account_types" class="dropdown-toggle first-link">--}}
+{{--                            <div class="">--}}
+{{--                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>--}}
+{{--                                <span>{{ __('messages.ecomercial_account_types') }}</span>--}}
+{{--                            </div>--}}
+{{--                        </a>--}}
+{{--                    </li>--}}
+{{--                @endif--}}
+{{--                @if(in_array(17 , Auth::user()->custom['admin_permission']))--}}
+{{--                    <li class="menu specialty">--}}
+{{--                        <a href="/admin-panel/specialty" class="dropdown-toggle first-link">--}}
+{{--                            <div class="">--}}
+{{--                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>--}}
+{{--                                <span>{{ __('messages.specialties') }}</span>--}}
+{{--                            </div>--}}
+{{--                        </a>--}}
+{{--                    </li>--}}
+{{--                @endif--}}
 
                 @if(in_array(6 , Auth::user()->custom['admin_permission']))
                     <li class="menu notifications">

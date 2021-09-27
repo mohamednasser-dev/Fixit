@@ -10,8 +10,24 @@
         </div>
     </div>
 </div>
+
+
 <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
 <script src="/admin/assets/js/libs/jquery-3.1.1.min.js"></script>
+
+
+
+<script src="/admin/plugins/highlight/highlight.pack.js"></script>
+<script src="/admin/plugins/select2/select2.min.js"></script>
+<script src="/admin/plugins/select2/custom-select2.js"></script>
+<script>
+    $(".tagging").select2({
+        tags: true
+    });
+</script>
+
+
+
 <script src="/admin/bootstrap/js/popper.min.js"></script>
 <script src="/admin/bootstrap/js/bootstrap.min.js"></script>
 <script src="/admin/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
@@ -127,9 +143,6 @@
 <script src="/admin/assets/js/scrollspyNav.js"></script>
 <script src="/admin/assets/js/components/ui-accordions.js"></script>
 {{----------------------------------------end -------------------------------------------}}
-
-
-<script src="/admin/plugins/highlight/highlight.pack.js"></script>
 
 @stack('scripts')
 @yield('scripts')

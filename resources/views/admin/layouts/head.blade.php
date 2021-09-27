@@ -15,12 +15,11 @@
         <link href="/admin/rtl/assets/css/plugins.css" rel="stylesheet" type="text/css" />
         <!-- END GLOBAL MANDATORY STYLES -->
         <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
-        <link href="/admin/rtl/plugins/apex/apexcharts.css" rel="stylesheet" type="text/css">
         <link href="/admin/rtl/assets/css/dashboard/dash_2.css" rel="stylesheet" type="text/css">
         <link href="/admin/rtl/assets/css/scrollspyNav.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" type="text/css" href="/admin/rtl/assets/css/forms/theme-checkbox-radio.css">
         <link href="/admin/rtl/assets/css/tables/table-basic.css" rel="stylesheet" type="text/css" />
-        <link href="/admin/rtl/plugins/apex/apexcharts.css" rel="stylesheet" type="text/css">
+{{--        <link href="/admin/rtl/plugins/apex/apexcharts.css" rel="stylesheet" type="text/css">--}}
         <link href="/admin/rtl/assets/css/dashboard/dash_1.css" rel="stylesheet" type="text/css" />
         <link href="/admin/rtl/assets/css/elements/custom-pagination.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/admin/rtl/plugins/font-icons/fontawesome/css/regular.css">
@@ -61,12 +60,11 @@
         <link href="/admin/assets/css/plugins.css" rel="stylesheet" type="text/css" />
         <!-- END GLOBAL MANDATORY STYLES -->
         <!-- BEGIN PAGE LEVEL PLUGINS/CUSTOM STYLES -->
-        <link href="/admin/plugins/apex/apexcharts.css" rel="stylesheet" type="text/css">
         <link href="/admin/assets/css/dashboard/dash_2.css" rel="stylesheet" type="text/css">
         <link href="/admin/assets/css/scrollspyNav.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" type="text/css" href="/admin/assets/css/forms/theme-checkbox-radio.css">
         <link href="/admin/assets/css/tables/table-basic.css" rel="stylesheet" type="text/css" />
-        <link href="/admin/plugins/apex/apexcharts.css" rel="stylesheet" type="text/css">
+{{--        <link href="/admin/plugins/apex/apexcharts.css" rel="stylesheet" type="text/css">--}}
         <link href="/admin/assets/css/dashboard/dash_1.css" rel="stylesheet" type="text/css" />
         <link href="/admin/assets/css/elements/custom-pagination.css" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="/admin/plugins/font-icons/fontawesome/css/regular.css">
@@ -96,4 +94,7 @@
         <link href="/admin/plugins/toastr/toastr.min.css" rel="stylesheet" type="text/css">
         <link href="/css/new_styles.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="/admin/assets/css/forms/switches.css">
+        <link href="/admin/assets/css/scrollspyNav.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" type="text/css" href="/admin/plugins/select2/select2.min.css">
+    @yield('styles')
 </head>

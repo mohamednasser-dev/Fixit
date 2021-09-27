@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Product_category;
 use App\Product_comment;
 use App\Product_report;
 use JD\Cloudder\Facades\Cloudder;
@@ -100,17 +101,13 @@ class ProductController extends AdminController
     {
         $data = $this->validate(\request(),
             [
-                'user_id' => 'required',
+                'title_ar' => 'required',
+                'title_en' => 'required',
                 'category_id' => 'required',
-                'sub_category_id' => 'required',
-                'sub_category_two_id' => '',
-                'sub_category_three_id' => '',
-                'sub_category_four_id' => '',
-                'sub_category_five_id' => '',
-                'title' => 'required',
                 'price' => 'required',
-                'description' => 'required',
-                'plan_id' => 'required',
+                'city_id' => 'required',
+                'description_ar' => '',
+                'description_en' => '',
                 'main_image' => 'required',
             ]);
         if ($request->main_image != null) {
@@ -122,86 +119,16 @@ class ProductController extends AdminController
             $image_new_name = $image_id . '.' . $image_format;
             $data['main_image'] = $image_new_name;
         }
-        $selected_plan = Plan::where('id', $request->plan_id)->first();
-        $plan_detail = Plan_details::where('plan_id', $selected_plan->id)->where('type', 'expier_num')->first();
-        $expire_days = $plan_detail->expire_days;
-        //to get the expire_date of ad
-        $mytime = Carbon::now();
-        $today = Carbon::parse($mytime->toDateTimeString())->format('Y-m-d H:i');
-        $date = null;
-        $pin = Plan_details::where('plan_id', $selected_plan->id)->where('type', 'pin')->first();
-        if ($pin != null) {
-            $expire_pin_date = $pin->expire_days;
-            $data['pin'] = 1;
-            //to create expire pin date
-            $final_pin_date = Carbon::createFromFormat('Y-m-d H:i', $today);
-            $final_expire_pin_date = $final_pin_date->addDays($expire_pin_date);
-            $data['expire_pin_date'] = $final_expire_pin_date;
-        }
-        $re_post = Plan_details::where('plan_id', $selected_plan->id)->where('type', 're_post')->first();
-        if ($re_post != null) {
-            $expire_re_post_date = $re_post->expire_days;
-            $data['re_post'] = '1';
-            //to create expire pin date
-            $final_pin_date = Carbon::createFromFormat('Y-m-d H:i', $today);
-            $final_expire_re_post_date = $final_pin_date->addDays($expire_re_post_date);
-            $data['re_post_date'] = $final_expire_re_post_date;
-        }
-        $special = Plan_details::where('plan_id', $selected_plan->id)->where('type', 'special')->first();
-        if ($special != null) {
-            $expire_special_date = $special->expire_days;
-            $data['is_special'] = '1';
-            //to create expire pin date
-            $final_pin_date = Carbon::createFromFormat('Y-m-d H:i', $today);
-            $final_expire_special_date = $final_pin_date->addDays($expire_special_date);
-            $data['expire_special_date'] = $final_expire_special_date;
-        }
-        $final_today = Carbon::createFromFormat('Y-m-d H:i', $today);
-        $expire_date = $final_today->addDays($expire_days);
 
         $data['publish'] = 'Y';
-        $data['publication_date'] = $today;
-        $data['expiry_date'] = $expire_date;
         $product = Product::create($data);
 
-        foreach ($request->images as $image) {
-            $image_name = $image->getRealPath();
-            Cloudder::upload($image_name, null);
-            $imagereturned = Cloudder::getResult();
-            $image_id = $imagereturned['public_id'];
-            $image_format = $imagereturned['format'];
-            $image_new_name = $image_id . '.' . $image_format;
+        foreach ($request->categories as $cat) {
+            $data_cat['product_id'] = $product->id;
+            $data_cat['cat_id'] = $cat;
+            Product_category::create($data_cat);
+        }
 
-            $data_image['product_id'] = $product->id;
-            $data_image['image'] = $image_new_name;
-            ProductImage::create($data_image);
-        }
-        foreach ($request->options as $key => $option) {
-            $type = null;
-            if ($key == 0) {
-                $type = 'marka';
-            } else if ($key == 1) {
-                $type = 'marka_type';
-            } else if ($key == 2) {
-                $type = 'model_year';
-            } else if ($key == 3) {
-                $type = 'counter';
-            }
-            $marka_value = Category_option_value::where('id', $option)->first();
-            if ($marka_value != null) {
-                $feature_data['product_id'] = $product->id;
-                $feature_data['target_id'] = $option;
-                $feature_data['type'] = 'option';
-                $feature_data['option_type'] = $type;
-                Product_feature::create($feature_data);
-            } else {
-                $manual_data['product_id'] = $product->id;
-                $manual_data['target_id'] = $option;
-                $manual_data['type'] = 'manual';
-                $manual_data['option_type'] = $type;
-                Product_feature::create($manual_data);
-            }
-        }
         session()->flash('success', trans('messages.added_s'));
         return redirect()->route('products.index');
     }
@@ -210,7 +137,7 @@ class ProductController extends AdminController
     public function edit($id)
     {
         $data = Product::find($id);
-        return view("admin.products.product_edit", compact('data'));
+        return view("admin.products.edit", compact('data'));
     }
 
     // edit post
