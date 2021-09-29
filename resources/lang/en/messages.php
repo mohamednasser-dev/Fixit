@@ -335,7 +335,7 @@
         "archived" => "Archived",
         "published" => "Not Archived",
         "publication_date" => "Publication Date",
-        "main_image" => "Main Image",
+        "main_image" => "Technician Image",
         "upload_main_image" => "Upload Main Image",
         "product_images" => "Technician Images",
 					"show_buy" => "Show Buy Button",

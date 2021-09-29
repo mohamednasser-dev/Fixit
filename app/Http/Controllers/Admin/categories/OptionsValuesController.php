@@ -26,6 +26,7 @@ class OptionsValuesController extends AdminController{
             [
                 'value_ar' => 'required',
                 'value_en' => 'required',
+                'price' => 'required',
                 'option_id'=> 'required'
             ]);
         Category_option_value::create($data);
@@ -51,7 +52,9 @@ class OptionsValuesController extends AdminController{
         $option_value = Category_option_value::find($id);
         $option_value->value_ar = $request->value_ar;
         $option_value->value_en = $request->value_en;
+        $option_value->price = $request->price;
         $option_value->save();
+        session()->flash('success', trans('messages.updated_s'));
         return redirect( route('options_values.show',$option_value->option_id));
     }
 

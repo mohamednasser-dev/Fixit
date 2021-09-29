@@ -1068,99 +1068,21 @@ class CategoryController extends Controller
 
 
     // get category options
-    public function getCategoryOptions(Request $request)
+    public function getCategoryOptions(Request $request,$id)
     {
         $lang = $request->lang;
-        if ($request->category_id != 0 && $request->sub_category_id == 0 && $request->sub_two_category_id == 0) {
-            $data['options'] = Category_option::where('cat_id', $request->category_id)->where('cat_type', 'category')->where('deleted', '0')->select('id as option_id', 'title_' . $lang . ' as title', 'is_required')->get();
-            if (count($data['options']) > 0) {
-                for ($i = 0; $i < count($data['options']); $i++) {
-                    $data['options'][$i]['type'] = 'input';
-                    $optionValues = Category_option_value::where('option_id', $data['options'][$i]['option_id'])->where('deleted', '0')->select('id as value_id', 'value_' . $lang . ' as value')->get();
-                    if (count($optionValues) > 0) {
-
-                        $data['options'][$i]['type'] = 'select';
-                        $data['options'][$i]['values'] = $optionValues;
-                    }
-                }
-            }
-        } else if ($request->category_id != 0 && $request->sub_category_id != 0 && $request->sub_two_category_id == 0) {
-            $data['options'] = Category_option::where('cat_id', $request->sub_category_id)->where('cat_type', 'subcategory')->where('deleted', '0')->select('id as option_id', 'title_' . $lang . ' as title', 'is_required')->get();
-            if (count($data['options']) > 0) {
-                for ($i = 0; $i < count($data['options']); $i++) {
-                    $data['options'][$i]['type'] = 'input';
-                    $optionValues = Category_option_value::where('option_id', $data['options'][$i]['option_id'])->where('deleted', '0')->select('id as value_id', 'value_' . $lang . ' as value')->get();
-                    if (count($optionValues) > 0) {
-
-                        $data['options'][$i]['type'] = 'select';
-                        $data['options'][$i]['values'] = $optionValues;
-                    }
-                }
-            }
-            if (count($data['options']) == 0) {
-                    $data['options'] = Category_option::where('cat_id', $request->category_id)->where('cat_type', 'category')->where('deleted', '0')->select('id as option_id', 'title_en as title', 'is_required')->get();
-                    if (count($data['options']) > 0) {
-                        for ($i = 0; $i < count($data['options']); $i++) {
-                            $data['options'][$i]['type'] = 'input';
-                            $optionValues = Category_option_value::where('option_id', $data['options'][$i]['option_id'])->where('deleted', '0')->select('id as value_id', 'value_en as value')->get();
-                            if (count($optionValues) > 0) {
-                                $data['options'][$i]['type'] = 'select';
-                                $data['options'][$i]['values'] = $optionValues;
-                            }
-                        }
-                    }
-
-            }
-        } else if ($request->category_id != 0 && $request->sub_category_id != 0 && $request->sub_two_category_id != 0) {
-            $lang = $request->lang;
-            $data['options'] = [];
-            if ($request->sub_two_category_id != 0) {
-                $data['options'] = Category_option::where('cat_id', $request->sub_two_category_id)->where('cat_type', 'subTwoCategory')->where('deleted', '0')->select('id as option_id', 'title_' . $lang . ' as title', 'is_required')->get();
-                if (count($data['options']) > 0) {
-                    for ($i = 0; $i < count($data['options']); $i++) {
-                        $data['options'][$i]['type'] = 'input';
-                        $optionValues = Category_option_value::where('option_id', $data['options'][$i]['option_id'])->where('deleted', '0')->select('id as value_id', 'value_' . $lang . ' as value')->get();
-                        if (count($optionValues) > 0) {
-                            $data['options'][$i]['type'] = 'select';
-                            $data['options'][$i]['values'] = $optionValues;
-                        }
-                    }
-                }
-            }
-
-            if ($request->sub_category_id != 0) {
-                if (count($data['options']) == 0) {
-                    $data['options'] = Category_option::where('cat_id', $request->sub_category_id)->where('cat_type', 'subcategory')->where('deleted', '0')->select('id as option_id', 'title_' . $lang . ' as title', 'is_required')->get();
-                    if (count($data['options']) > 0) {
-                        for ($i = 0; $i < count($data['options']); $i++) {
-                            $data['options'][$i]['type'] = 'input';
-                            $optionValues = Category_option_value::where('option_id', $data['options'][$i]['option_id'])->where('deleted', '0')->select('id as value_id', 'value_' . $lang . ' as value')->get();
-                            if (count($optionValues) > 0) {
-                                $data['options'][$i]['type'] = 'select';
-                                $data['options'][$i]['values'] = $optionValues;
-                            }
-                        }
-                    }
-                }
-            }
-
-
-            if ($request->category_id != 0) {
-                if (count($data['options']) == 0) {
-                    $data['options'] = Category_option::where('cat_id', $request->category_id)->where('cat_type', 'category')->where('deleted', '0')->select('id as option_id', 'title_' . $lang . ' as title', 'is_required')->get();
-                    if (count($data['options']) > 0) {
-                        for ($i = 0; $i < count($data['options']); $i++) {
-                            $data['options'][$i]['type'] = 'input';
-                            $optionValues = Category_option_value::where('option_id', $data['options'][$i]['option_id'])->where('deleted', '0')->select('id as value_id', 'value_' . $lang . ' as value')->get();
-                            if (count($optionValues) > 0) {
-                                $data['options'][$i]['type'] = 'select';
-                                $data['options'][$i]['values'] = $optionValues;
-                            }
-                        }
-                    }
+        $data['options'] = Category_option::whereHas('Option_value')->where('cat_id', $id)->where('cat_type', 'category')->where('deleted', '0')->select('id as option_id', 'title_' . $lang . ' as title')->get();
+        if (count($data['options']) > 0) {
+            for ($i = 0; $i < count($data['options']); $i++) {
+                $data['options'][$i]['type'] = 'input';
+                $optionValues = Category_option_value::where('option_id', $data['options'][$i]['option_id'])->where('deleted', '0')->select('id as value_id', 'value_' . $lang . ' as value' , 'price')->get();
+                if (count($optionValues) > 0) {
+                    $data['options'][$i]['type'] = 'select';
+                    $data['options'][$i]['values'] = $optionValues;
                 }
             }
         }
+
         $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
         return response()->json($response, 200);
     }

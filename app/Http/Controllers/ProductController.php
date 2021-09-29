@@ -1592,18 +1592,10 @@ class ProductController extends Controller
     public function cities(Request $request)
     {
         Session::put('api_lang', $request->lang);
-        if ($request->lang == 'en') {
-            $cities = City::with('Areas')
-                ->where('deleted', '0')
-                ->select('id', 'title_en as title')
+            $cities = City::where('deleted', '0')
+                ->select('id', 'title_'.$request->lang.' as title')
                 ->get();
-        } else {
-            $cities = City::with('Areas')
-                ->where('deleted', '0')
-                ->select('id', 'title_ar as title')
-                ->get();
-        }
-        $response = APIHelpers::createApiResponse(false, 200, '', '', array('cities' => $cities), $request->lang);
+        $response = APIHelpers::createApiResponse(false, 200, '', '', $cities, $request->lang);
         return response()->json($response, 200);
     }
 

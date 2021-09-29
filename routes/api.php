@@ -113,7 +113,7 @@ use Illuminate\Http\Request;
     Route::get('/home/{lang}/{v}' , 'HomeController@gethome')->middleware('checkguest');
 
     // get home data
-    Route::get('/home-ads/{lang}/{v}' , 'HomeController@getHomeAds')->middleware('checkguest');
+    Route::get('/home_page/{lang}/{v}' , 'HomeController@getHomeAds')->middleware('checkguest');
     Route::get('/home/city_filter/{area_id}/{lang}/{v}' , 'HomeController@city_filter')->middleware('checkguest');
 
     // send contact us message
@@ -161,13 +161,16 @@ use Illuminate\Http\Request;
     Route::get('/ad/get_marka/{lang}/{v}' , 'MarkaController@get_marka');
     Route::get('/ad/get_marka_types/{marka_id}/{lang}/{v}' , 'MarkaController@get_marka_types');
     Route::get('/ad/get_type_model/{marka_type_id}/{lang}/{v}' , 'MarkaController@get_type_model');
-    Route::get('/ad/category_options/{lang}/{v}' , 'CategoryController@getCategoryOptions');
+    Route::get('/ad/category_options/{id}/{lang}/{v}' , 'CategoryController@getCategoryOptions');
     Route::get('/ad/sub_category_options/{category}/{sub_category}/{lang}/{v}' , 'CategoryController@getSubCategoryOptions');
     Route::get('/ad/sub_two_category_options/{category}/{sub_category}/{sub_two_category}/{lang}/{v}' , 'CategoryController@getSubTwoCategoryOptions');
 
     //store ad with steps
     Route::post('/ad/save_new_ad/{lang}/{v}' , 'ProductController@save_first_step');
     Route::post('/ad/save_second_step/{lang}/{v}' , 'ProductController@save_second_step');
+
+    Route::get('/service_details/{id}/{lang}/{v}' , 'ServicesController@service_details');
+    Route::get('/technician_details/{id}/{lang}/{v}' , 'ServicesController@technician_details');
 
     Route::get('/ad/select_all_plans/{cat_id}/{lang}/{v}' , 'PlanController@select_all_plans');
     Route::get('/ad/save_third_step/{ad_id}/{plan_id}/{lang}/{v}' , 'ProductController@save_third_step');

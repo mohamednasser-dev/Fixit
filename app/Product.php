@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-
+protected $appends = ['specialties'];
 //    protected $dates = ['publication_date'];
     protected $fillable = ['title_ar','title_en','description_ar','description_en', 'price','category_id','sub_category_id','sub_category_two_id','expire_special_date',
         'sub_category_three_id','sub_category_four_id','user_id', 'type','publication_date','re_post_date','is_special',
@@ -50,6 +50,41 @@ class Product extends Model
     }
     public function Area() {
         return $this->belongsTo('App\Area', 'area_id');
+    }
+    public function Product_categories() {
+        return $this->hasMany('App\Product_category', 'product_id');
+    }
+
+    public function Specialities_data() {
+        return $this->hasMany('App\Product_category', 'product_id')->with('Category_data')->select('id','product_id','cat_id');
+    }
+
+
+
+    public function A() {
+        return $this->hasMany('App\Product_category', 'product_id');
+    }
+    public function getSpecialtiesAttribute()
+    {
+        $result = "";
+        if(session('api_lang') == 'ar'){
+            foreach ($this->Product_categories as $speciality){
+                $result = $result . $speciality->Category->title_ar . ' - ';
+            }
+        }else{
+            foreach ($this->Product_categories as $speciality){
+                $result = $result . $speciality->Category->title_en . ' - ';
+            }
+        }
+        return $result ;
+    }
+    public function getPriceAttribute($price)
+    {
+        if($price != null){
+            return number_format((float)($price), 3);
+        }else{
+            return null ;
+        }
     }
 
     public function Area_name() {
