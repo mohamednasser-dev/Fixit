@@ -35,13 +35,26 @@ class AdController extends AdminController{
         }
         $ad->save();
         session()->flash('success', trans('messages.added_s'));
-        return redirect('admin-panel/ads/show');
+        if($request->place == 1){
+            return redirect('admin-panel/ads/show');
+        }else{
+            return redirect('admin-panel/offers/show');
+        }
     }
     // get all ads
     public function show(Request $request){
-        $data['ads_top'] = Ad::where('place',1)->orderBy('id' , 'desc')->get();
-        $data['ads_bottom'] = Ad::where('place',3)->orderBy('id' , 'desc')->get();
-        return view('admin.ads.ads' , ['data' => $data]);
+        $data = Ad::where('place',1)->orderBy('id' , 'desc')->get();
+        return view('admin.ads.ads' , compact('data'));
+    }
+
+
+    public function show_offers(Request $request){
+        $data = Ad::where('place',3)->orderBy('id' , 'desc')->get();
+        return view('admin.offers.ads' , compact('data'));
+    }
+    public function add_offers(){
+        $data['users'] = User::orderBy('created_at', 'desc')->get();
+        return view('admin.offers.ad_form', ["data" => $data]);
     }
 
     // get edit page
@@ -101,7 +114,7 @@ class AdController extends AdminController{
         if($ad){
             $ad->delete();
         }
-        return redirect('admin-panel/ads/show');
+        return redirect()->back();
     }
 
     public function fetch_products($userId) {

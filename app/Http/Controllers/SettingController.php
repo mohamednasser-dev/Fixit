@@ -42,9 +42,9 @@ class SettingController extends Controller
 	}
 	public function about_app(Request $request){
         if($request->lang == 'en'){
-            $terms = Setting::where('id',1)->select('id' , 'aboutapp_en as phone')->get();
+            $terms = Setting::where('id',1)->select('id' , 'aboutapp_en as about_app')->get();
         }else{
-            $terms = Setting::where('id',1)->select('id' , 'aboutapp_ar as phone')->get();
+            $terms = Setting::where('id',1)->select('id' , 'aboutapp_ar as about_app')->get();
         }
         $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $terms , $request->lang);
         return response()->json($response , 200);

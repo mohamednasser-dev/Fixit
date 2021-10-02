@@ -113,8 +113,14 @@ use Illuminate\Http\Request;
     Route::get('/home/{lang}/{v}' , 'HomeController@gethome')->middleware('checkguest');
 
     // get home data
-    Route::get('/home_page/{lang}/{v}' , 'HomeController@getHomeAds')->middleware('checkguest');
-    Route::get('/home/city_filter/{area_id}/{lang}/{v}' , 'HomeController@city_filter')->middleware('checkguest');
+    Route::get('/home/main_page/{lang}/{v}' , 'HomeController@main_page')->middleware('checkguest');
+    Route::get('/home/offers/{lang}/{v}' , 'HomeController@offers')->middleware('checkguest');
+
+    //orders routes ..
+    Route::post('/home/add_order/{lang}/{v}' , 'HomeController@add_order');
+    Route::get('/home/my_orders/{lang}/{v}' , 'HomeController@my_orders');
+
+
 
     // send contact us message
     Route::post('/contactus/{lang}/{v}' , 'ContactUsController@SendMessage')->middleware('checkguest');
@@ -169,8 +175,8 @@ use Illuminate\Http\Request;
     Route::post('/ad/save_new_ad/{lang}/{v}' , 'ProductController@save_first_step');
     Route::post('/ad/save_second_step/{lang}/{v}' , 'ProductController@save_second_step');
 
-    Route::get('/service_details/{id}/{lang}/{v}' , 'ServicesController@service_details');
-    Route::get('/technician_details/{id}/{lang}/{v}' , 'ServicesController@technician_details');
+    Route::get('/service/details/{id}/{cat_id}/{lang}/{v}' , 'ServicesController@details');
+    Route::get('/service/technician_details/{id}/{lang}/{v}' , 'ServicesController@technician_details');
 
     Route::get('/ad/select_all_plans/{cat_id}/{lang}/{v}' , 'PlanController@select_all_plans');
     Route::get('/ad/save_third_step/{ad_id}/{plan_id}/{lang}/{v}' , 'ProductController@save_third_step');
@@ -225,8 +231,14 @@ use Illuminate\Http\Request;
     Route::post('/visitor/create/{lang}/{v}' , 'VisitorController@create')->middleware('checkguest');
 
 
-    Route::get('/ad/cities/{lang}/{v}' , 'ProductController@cities');
-Route::get('/ad/areas/{city_id}/{lang}/{v}' , 'ProductController@areas');
+    // Cities
+    Route::get('/product/cities/{lang}/{v}' , 'ProductController@cities');
+    Route::get('/product/update_city/{id}/{lang}/{v}' , 'ProductController@update_city');
+    Route::get('/ad/areas/{city_id}/{lang}/{v}' , 'ProductController@areas');
+    Route::get('/home/city_filter/{area_id}/{lang}/{v}' , 'HomeController@city_filter')->middleware('checkguest');
+
+
+
     Route::get('/ad/last_seen/{lang}/{v}' , 'ProductController@last_seen');
     Route::get('/ad/offer_ads/{lang}/{v}' , 'ProductController@offer_ads');
     Route::get('/payments_date/{lang}/{v}' , 'UserController@payments_date');

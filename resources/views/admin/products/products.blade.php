@@ -21,6 +21,7 @@
                         <thead>
                         <tr>
                             <th class="text-center">Id</th>
+                            <th class="text-center">{{ __('messages.image') }}</th>
                             <th class="text-center">{{ __('messages.product_name') }}</th>
                             <th class="text-center">{{ __('messages.product_price') }}</th>
                             <th class="text-center">{{ __('messages.details') }}</th>
@@ -37,6 +38,7 @@
                         @foreach ($data['products'] as $product)
                             <tr>
                                 <td class="text-center"><?=$i;?></td>
+                                <td class="text-center"><img src="{{image_cloudinary_url()}}{{ $product->main_image }}"/>
                                 <td class="text-center">  {{ (app()->getLocale() == 'ar')? $product->title_ar :  $product->title_en }}</td>
                                 <td class="text-center">  {{$product->price}}</td>
                                 <td class="text-center blue-color">

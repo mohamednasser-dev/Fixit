@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-protected $appends = ['specialties'];
+protected $appends = ['specialties','done_orders'];
 //    protected $dates = ['publication_date'];
     protected $fillable = ['title_ar','title_en','description_ar','description_en', 'price','category_id','sub_category_id','sub_category_two_id','expire_special_date',
         'sub_category_three_id','sub_category_four_id','user_id', 'type','publication_date','re_post_date','is_special',
@@ -54,6 +54,9 @@ protected $appends = ['specialties'];
     public function Product_categories() {
         return $this->hasMany('App\Product_category', 'product_id');
     }
+    public function Orders_accepted() {
+        return $this->hasMany('App\Order', 'product_id')->where('status','accept');
+    }
 
     public function Specialities_data() {
         return $this->hasMany('App\Product_category', 'product_id')->with('Category_data')->select('id','product_id','cat_id');
@@ -85,6 +88,11 @@ protected $appends = ['specialties'];
         }else{
             return null ;
         }
+    }
+
+    public function getDoneOrdersAttribute($price)
+    {
+            return $this->Orders_accepted->count() ;
     }
 
     public function Area_name() {

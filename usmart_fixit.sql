@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 28, 2021 at 01:41 AM
+-- Generation Time: Oct 03, 2021 at 12:04 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.9
 
@@ -219,6 +219,15 @@ CREATE TABLE `ads` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `ads`
+--
+
+INSERT INTO `ads` (`id`, `image`, `type`, `content`, `place`, `created_at`, `updated_at`) VALUES
+(22, 'k1fmkd2sqbjhadvlhx40.png', 'link', 'http://127.0.0.1:8000/admin-panel/ads/add', 3, '2021-10-02 12:54:04', '2021-10-02 12:54:04'),
+(23, 'vbmjnmaidjnseakbn0ej.jpg', 'link', 'http://127.0.0.1:8000/admin-panel/ads/add', 3, '2021-10-02 12:54:39', '2021-10-02 12:54:39'),
+(24, 'q0vyhxyo38wfbepqxxjc.jpg', 'link', 'https://www.google.com/?hl=ar', 1, '2021-10-02 12:55:54', '2021-10-02 12:55:54');
+
 -- --------------------------------------------------------
 
 --
@@ -299,8 +308,10 @@ INSERT INTO `categories` (`id`, `image`, `title_en`, `title_ar`, `deleted`, `sor
 (11, 'pgrs8yd5zqvfx41senlm.png', 'Electrician', 'فني كهربائي', 0, NULL, '2021-09-27 09:05:42', '2021-09-27 09:05:42'),
 (12, 'vcsndf3h8yl7ytpioejr.png', 'car service', 'خدمة السيارات', 0, NULL, '2021-09-27 09:06:15', '2021-09-27 09:06:15'),
 (13, 'm5p9nnwt0vbw8iufx3w2.png', 'plumbing work', 'أعمال السباكة', 0, NULL, '2021-09-27 09:08:41', '2021-09-27 09:08:41'),
-(14, 'v88h1ozbb1vinmu30dja.png', 'satellite technician', 'فنء ستالايت', 0, NULL, '2021-09-27 09:09:43', '2021-09-27 09:09:43'),
-(15, 'tzh8my3jsaegzpojoivk.png', 'fix phones', 'صيانة هواتف', 0, NULL, '2021-09-27 09:10:38', '2021-09-27 09:10:38');
+(14, 'v88h1ozbb1vinmu30dja.png', 'satellite technician', 'فني ستالايت', 0, NULL, '2021-09-27 09:09:43', '2021-10-02 14:52:25'),
+(15, 'tzh8my3jsaegzpojoivk.png', 'fix phones', 'صيانة هواتف', 0, NULL, '2021-09-27 09:10:38', '2021-09-27 09:10:38'),
+(16, 'bersgkvfx0jk94xbfi3j.jpg', 'building work', 'اعمال بناء', 0, NULL, '2021-10-02 15:56:47', '2021-10-02 15:56:47'),
+(17, 'jvqc82esxsostj8rzlzx.jpg', 'resturant work', 'اعمال المطاعم', 0, NULL, '2021-10-02 15:57:34', '2021-10-02 15:57:34');
 
 -- --------------------------------------------------------
 
@@ -358,6 +369,7 @@ CREATE TABLE `category_option_values` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `value_ar` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `value_en` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `price` double(8,2) NOT NULL DEFAULT 0.00,
   `option_id` bigint(20) UNSIGNED DEFAULT NULL,
   `deleted` enum('0','1') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
@@ -368,8 +380,9 @@ CREATE TABLE `category_option_values` (
 -- Dumping data for table `category_option_values`
 --
 
-INSERT INTO `category_option_values` (`id`, `value_ar`, `value_en`, `option_id`, `deleted`, `created_at`, `updated_at`) VALUES
-(31, 'تركيب', 'Installation', 32, '0', '2021-09-27 09:23:32', '2021-09-27 09:23:32');
+INSERT INTO `category_option_values` (`id`, `value_ar`, `value_en`, `price`, `option_id`, `deleted`, `created_at`, `updated_at`) VALUES
+(31, 'تركيب', 'Installation', 50.00, 32, '0', '2021-09-27 09:23:32', '2021-09-29 11:17:16'),
+(32, 'تركيب ليد داخلى', 'make lide inside', 100.00, 32, '0', '2021-09-29 11:17:04', '2021-09-29 11:17:04');
 
 -- --------------------------------------------------------
 
@@ -379,9 +392,9 @@ INSERT INTO `category_option_values` (`id`, `value_ar`, `value_en`, `option_id`,
 
 CREATE TABLE `cities` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `title_ar` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `title_en` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `image` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `deleted` enum('0','1') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -391,14 +404,14 @@ CREATE TABLE `cities` (
 -- Dumping data for table `cities`
 --
 
-INSERT INTO `cities` (`id`, `image`, `title_ar`, `title_en`, `deleted`, `created_at`, `updated_at`) VALUES
-(1, NULL, 'مدينة الكويت', 'Kuwait city', '0', '2021-03-01 13:46:37', '2021-04-18 15:29:53'),
-(2, NULL, 'c', 'Class 3', '1', '2021-04-18 15:28:43', '2021-04-18 15:30:11'),
-(3, NULL, 'محافظة حولي', 'Hawalli Governorate', '0', '2021-04-18 15:30:56', '2021-04-18 15:30:56'),
-(4, NULL, 'محافظة الفروانية', 'Farwaniya Governorate', '0', '2021-04-18 15:31:20', '2021-04-18 15:31:20'),
-(5, NULL, 'محافظة الأحمدي', 'Ahmadi Governorate', '0', '2021-04-18 15:31:38', '2021-04-18 15:31:38'),
-(6, NULL, 'محافظة الجهراء', 'Jahra Governorate', '0', '2021-04-18 15:32:02', '2021-04-18 15:32:02'),
-(7, NULL, 'محافظة مبارك الكبير', 'Mubarak Al-Kabeer Governorate', '0', '2021-04-18 15:32:26', '2021-04-18 15:32:26');
+INSERT INTO `cities` (`id`, `title_ar`, `title_en`, `image`, `deleted`, `created_at`, `updated_at`) VALUES
+(1, 'مدينة الكويت', 'Kuwait city', NULL, '0', '2021-03-01 13:46:37', '2021-04-18 15:29:53'),
+(2, 'c', 'Class 3', NULL, '1', '2021-04-18 15:28:43', '2021-04-18 15:30:11'),
+(3, 'محافظة حولي', 'Hawalli Governorate', NULL, '0', '2021-04-18 15:30:56', '2021-04-18 15:30:56'),
+(4, 'محافظة الفروانية', 'Farwaniya Governorate', NULL, '0', '2021-04-18 15:31:20', '2021-04-18 15:31:20'),
+(5, 'محافظة الأحمدي', 'Ahmadi Governorate', NULL, '0', '2021-04-18 15:31:38', '2021-04-18 15:31:38'),
+(6, 'محافظة الجهراء', 'Jahra Governorate', NULL, '0', '2021-04-18 15:32:02', '2021-04-18 15:32:02'),
+(7, 'محافظة مبارك الكبير', 'Mubarak Al-Kabeer Governorate', NULL, '0', '2021-04-18 15:32:26', '2021-04-18 15:32:26');
 
 -- --------------------------------------------------------
 
@@ -414,6 +427,13 @@ CREATE TABLE `contact_us` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `contact_us`
+--
+
+INSERT INTO `contact_us` (`id`, `phone`, `message`, `seen`, `created_at`, `updated_at`) VALUES
+(50, '012254666', 'ksksdlssklsjdlshklss', 0, '2021-10-02 11:18:48', '2021-10-02 11:18:48');
 
 -- --------------------------------------------------------
 
@@ -626,7 +646,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (253, '2021_06_26_144746_create_account_types_table', 18),
 (254, '2021_07_07_132844_create_specialties_table', 19),
 (255, '2021_07_07_132845_create_user_specialties_table', 19),
-(256, '2021_09_27_141045_create_product_categories_table', 20);
+(256, '2021_09_27_141045_create_product_categories_table', 20),
+(257, '2021_09_29_145638_create_orders_table', 21);
 
 -- --------------------------------------------------------
 
@@ -737,6 +758,31 @@ INSERT INTO `notifications` (`id`, `title`, `body`, `image`, `created_at`, `upda
 (66, 'Test4', 'Test4', NULL, '2021-06-05 12:04:07', '2021-06-05 12:04:07'),
 (67, 'Test', 'Test', NULL, '2021-06-05 12:16:30', '2021-06-05 12:16:30'),
 (68, 'Test', 'Test', NULL, '2021-06-05 13:09:50', '2021-06-05 13:09:50');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `product_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `price` double NOT NULL DEFAULT 0,
+  `visit_time` time NOT NULL,
+  `visit_date` date NOT NULL,
+  `status` enum('accept','reject','current') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'current',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `product_id`, `user_id`, `price`, `visit_time`, `visit_date`, `status`, `created_at`, `updated_at`) VALUES
+(1, 91, 111, 200, '21:00:00', '2021-10-20', 'current', '2021-10-02 16:23:25', '2021-10-02 16:23:25');
 
 -- --------------------------------------------------------
 
@@ -926,7 +972,8 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `title_ar`, `title_en`, `description_ar`, `description_en`, `price`, `category_id`, `sub_category_id`, `sub_category_two_id`, `sub_category_three_id`, `sub_category_four_id`, `sub_category_five_id`, `main_image`, `user_id`, `type`, `views`, `offer`, `choose_it`, `status`, `deleted`, `publish`, `publication_date`, `expiry_date`, `retweet_date`, `retweet`, `expire_pin_date`, `feature`, `plan_id`, `city_id`, `area_id`, `share_location`, `latitude`, `longitude`, `pin`, `re_post`, `re_post_date`, `is_special`, `expire_special_date`, `created_at`, `updated_at`) VALUES
-(91, 'نادر يوسف', 'nader yosef', 'بشيلبسيليسلبسيلي', 'fdggfgfsdfgfsdg', 200.00, 11, NULL, NULL, NULL, NULL, NULL, 'gus2ae5cibrm40wcdopn.jpg', NULL, 1, 0, 0, 0, 1, 0, 'Y', NULL, NULL, NULL, 0, NULL, 0, NULL, 1, NULL, '1', NULL, NULL, 0, '0', NULL, '0', NULL, '2021-09-27 12:28:43', '2021-09-27 12:28:43');
+(91, 'نادر يوسف', 'nader yosef', 'بشيلبسيليسلبسيلي', 'fdggfgfsdfgfsdg', 200.00, 11, NULL, NULL, NULL, NULL, NULL, 'gus2ae5cibrm40wcdopn.jpg', NULL, 1, 0, 0, 0, 1, 0, 'Y', NULL, NULL, NULL, 0, NULL, 0, NULL, 1, NULL, '1', NULL, NULL, 0, '0', NULL, '0', NULL, '2021-09-27 12:28:43', '2021-09-27 12:28:43'),
+(92, 'احمد علي', 'ahmed ali', 'fdgfdgfdgfdg', 'fdgfdgfdgfdgfdg', 450.00, 11, NULL, NULL, NULL, NULL, NULL, 'ewddkcnbftkw7ps76mx5.jpg', NULL, 1, 0, 0, 0, 1, 0, 'Y', NULL, NULL, NULL, 0, NULL, 0, NULL, 1, NULL, '1', NULL, NULL, 0, '0', NULL, '0', NULL, '2021-10-02 12:11:42', '2021-10-02 12:11:42');
 
 -- --------------------------------------------------------
 
@@ -949,7 +996,8 @@ CREATE TABLE `product_categories` (
 INSERT INTO `product_categories` (`id`, `product_id`, `cat_id`, `created_at`, `updated_at`) VALUES
 (1, 91, 14, '2021-09-27 12:28:43', '2021-09-27 12:28:43'),
 (2, 91, 15, '2021-09-27 12:28:43', '2021-09-27 12:28:43'),
-(3, 91, 16, '2021-09-27 12:28:43', '2021-09-27 12:28:43');
+(3, 91, 16, '2021-09-27 12:28:43', '2021-09-27 12:28:43'),
+(4, 92, 15, '2021-10-02 12:11:42', '2021-10-02 12:11:42');
 
 -- --------------------------------------------------------
 
@@ -1111,15 +1159,16 @@ CREATE TABLE `settings` (
   `ad_period` int(11) NOT NULL,
   `offer_image` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `offer_image_en` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `show_buy` tinyint(1) NOT NULL DEFAULT 0
+  `show_buy` tinyint(1) NOT NULL DEFAULT 0,
+  `city_id` bigint(20) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `settings`
 --
 
-INSERT INTO `settings` (`id`, `app_phone`, `termsandconditions_en`, `termsandconditions_ar`, `aboutapp_en`, `aboutapp_ar`, `counter_image`, `created_at`, `updated_at`, `expier_days`, `app_name_en`, `app_name_ar`, `logo`, `email`, `phone`, `address_en`, `address_ar`, `facebook`, `youtube`, `twitter`, `instegram`, `map_url`, `latitude`, `longitude`, `snap_chat`, `is_loop_free_balance`, `free_loop_period`, `free_loop_balance`, `free_loop_date`, `post_address`, `free_balance`, `fax`, `free_ads_count`, `ad_period`, `offer_image`, `offer_image_en`, `show_buy`) VALUES
-(1, '0096566848259', '<p>hello terms test</p>', '<p><br />\r\n<br />\r\nمرحباً بك فى ( وينر) ، هذه هي سياسة الإستخدام والشروط والأحكام الخاصة بالتطبيق وإستخدامك له وكل متعلقاته و خدماته ، بموافقتك على (الشروط والأحكام) بالإضافة إلى المعلومات ذات العلاقة المدرجة في هذه الإتفاقية وبإستخدامك التطبيق ، فإنك توضح لنا أنك ملزم بهذه الشروط الخاصة بــ ( وينر ).<br />\r\n<br />\r\nإن استخدامك لتطبيق ( وينر ) يعني موافقتك على تفعيل إتفاقية المستخدم، وان كنت غير موافق على إتفاقية المستخدم، فمن فضلك لا تدخل أو تسجل أو تستخدم هذا التطبيق .<br />\r\n<br />\r\nقبل أن تكون أو تستمر كعضو معنا , لابد أن تقرأ وتوافق على إتفاقية المستخدم وعلى سياسة الخصوصية الخاصة بـ ( وينر ) والدخول إلى أى معلومات متصلة أخرى بخصوص إتفاقية المستخدم مثل أى معلومات مرتبطة بسياسة الإستخدام المطبقة على المستخدم، كل هذه المعلومات وسياسة الخصوصية يتم تطبيقها بموجب هذا القانون الموجود فى إتفاقية المستخدم .<br />\r\n<br />\r\n<br />\r\n<br />\r\nنود في ( وينر ) أن نتأكد من قدرة كل الأعضاء على تكوين عقود إلزام قانونية يحتفظ بحقه فى وضع حد أو إستبعاد عضوية أى شخص يخالف السياسة ، من جهة أخرى، ففى حالة الدخول إلى التطبيق ككيان تجاري أو شخصية إعتبارية, فإنك تؤكد أنك يمكنك إخضاع هذا الكيان إلى إتفاقية المستخدم وأنك والكيان التجاري خاضعين لكافة القوانين المرتبطة بالتجارة عبر الإنترنت.<br />\r\n<br />\r\n<br />\r\n<br />\r\nعند التسجيل كعضو فى التطبيق، يجب عليك تقديم معلومات معينة وتسجيل إسم المستخدم والرقم السرى الخاص بك .<br />\r\n<br />\r\nعندما تصبح عضو بالتطبيق فإنك توافق على الآتي:<br />\r\n<br />\r\nأ- مسؤوليتك في الحفاظ على خصوصية وتقييد إستخدام حسابك الخاص والرقم السرى الخاص بك.<br />\r\n<br />\r\nب- إقرارك بمسؤليتك الكاملة تجاه الأنشطة التي تحدث من خلال حسابك الخاص ورقمك السري، وأنك ستقوم بإبلاغ ( وينر ) عن أي إستخدام غير مشروع لرقمك السري أو حسابك الخاص أو أي خرق أمني.<br />\r\n<br />\r\nج- لن يكون تطبيق ( وينر ) مسئولاً عن أى خسارة مباشرة أو غير مباشرة فى فساد البضاعة من ناحيتك .<br />\r\n<br />\r\nد- لا يمكنك إستخدام الحساب الخاص بشخص آخر بدون إظهار تصريح القبول لحامل الحساب.<br />\r\n<br />\r\nهـ- أن عضويتك تعنى موافقتك على تعويض ( وينر ) عن أى إستخدام غير مشروع لحسابك الخاص عن طريقك أو عن طريق أي شخص آخر يستطيع الوصول للتطبيق والخدمات من خلال استخدام إسم المستخدم الخاص بك ورقمك السري سواء كنت تعلم أو لا تعلم بهذا الإستخدام.<br />\r\n<br />\r\nو- أن تمنحنا معلومات صحيحة ودقيقة وحالية وكاملة عنك كما هو مطلوب فى إستمارة التسجيل (بيانات التسجيل) الخاصة بـ ( وينر ) .<br />\r\n<br />\r\nز- أن لا تضع كلمة &quot; ( وينر ) &quot; في إسم المستخدم الخاص بك.</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>&nbsp;</p>', '<p>hello ther ^_^</p>', '<p><span style=\"font-size:18px\">تطبيق فستان أول تطبيق كويتي لعرض وبيع الملابس الجديدة والمستعملة حيث يوفر لك عرض منتجاتك بكل سهولة والتصفح المعروضات والتواصل مع المعلن بضغطة زر</span></p>', 'ardumevbg8l4xsyjpn7q.jpg', '2020-02-05 09:15:45', '2021-09-27 09:03:17', 7, NULL, 'Herage', 'cxzrmshz1eu6uiijlldi.png', 'info@fastan-store.com', '0096566848259', 'Kuwait', 'كويت', 'facebook.com', 'youtube.com', 'twitter.com', 'Fastan_store.com', 'https://www.google.com/maps/@30.0430715,31.4056989,16z', '30.0430715', '31.4056989', 'Fastanstore20.com', 'n', 20, 50.00, '2021-03-09 04:10:00', '2222222', 50.00, '1111111', 3, 365, 'va5jpf5vukmyp2ffgbfi.png', 'wxomesfemvssxk0bxfmv.jpg', 1);
+INSERT INTO `settings` (`id`, `app_phone`, `termsandconditions_en`, `termsandconditions_ar`, `aboutapp_en`, `aboutapp_ar`, `counter_image`, `created_at`, `updated_at`, `expier_days`, `app_name_en`, `app_name_ar`, `logo`, `email`, `phone`, `address_en`, `address_ar`, `facebook`, `youtube`, `twitter`, `instegram`, `map_url`, `latitude`, `longitude`, `snap_chat`, `is_loop_free_balance`, `free_loop_period`, `free_loop_balance`, `free_loop_date`, `post_address`, `free_balance`, `fax`, `free_ads_count`, `ad_period`, `offer_image`, `offer_image_en`, `show_buy`, `city_id`) VALUES
+(1, '0096566848259', '<p>hello terms test</p>', '<p><br />\r\n<br />\r\nمرحباً بك فى ( وينر) ، هذه هي سياسة الإستخدام والشروط والأحكام الخاصة بالتطبيق وإستخدامك له وكل متعلقاته و خدماته ، بموافقتك على (الشروط والأحكام) بالإضافة إلى المعلومات ذات العلاقة المدرجة في هذه الإتفاقية وبإستخدامك التطبيق ، فإنك توضح لنا أنك ملزم بهذه الشروط الخاصة بــ ( وينر ).<br />\r\n<br />\r\nإن استخدامك لتطبيق ( وينر ) يعني موافقتك على تفعيل إتفاقية المستخدم، وان كنت غير موافق على إتفاقية المستخدم، فمن فضلك لا تدخل أو تسجل أو تستخدم هذا التطبيق .<br />\r\n<br />\r\nقبل أن تكون أو تستمر كعضو معنا , لابد أن تقرأ وتوافق على إتفاقية المستخدم وعلى سياسة الخصوصية الخاصة بـ ( وينر ) والدخول إلى أى معلومات متصلة أخرى بخصوص إتفاقية المستخدم مثل أى معلومات مرتبطة بسياسة الإستخدام المطبقة على المستخدم، كل هذه المعلومات وسياسة الخصوصية يتم تطبيقها بموجب هذا القانون الموجود فى إتفاقية المستخدم .<br />\r\n<br />\r\n<br />\r\n<br />\r\nنود في ( وينر ) أن نتأكد من قدرة كل الأعضاء على تكوين عقود إلزام قانونية يحتفظ بحقه فى وضع حد أو إستبعاد عضوية أى شخص يخالف السياسة ، من جهة أخرى، ففى حالة الدخول إلى التطبيق ككيان تجاري أو شخصية إعتبارية, فإنك تؤكد أنك يمكنك إخضاع هذا الكيان إلى إتفاقية المستخدم وأنك والكيان التجاري خاضعين لكافة القوانين المرتبطة بالتجارة عبر الإنترنت.<br />\r\n<br />\r\n<br />\r\n<br />\r\nعند التسجيل كعضو فى التطبيق، يجب عليك تقديم معلومات معينة وتسجيل إسم المستخدم والرقم السرى الخاص بك .<br />\r\n<br />\r\nعندما تصبح عضو بالتطبيق فإنك توافق على الآتي:<br />\r\n<br />\r\nأ- مسؤوليتك في الحفاظ على خصوصية وتقييد إستخدام حسابك الخاص والرقم السرى الخاص بك.<br />\r\n<br />\r\nب- إقرارك بمسؤليتك الكاملة تجاه الأنشطة التي تحدث من خلال حسابك الخاص ورقمك السري، وأنك ستقوم بإبلاغ ( وينر ) عن أي إستخدام غير مشروع لرقمك السري أو حسابك الخاص أو أي خرق أمني.<br />\r\n<br />\r\nج- لن يكون تطبيق ( وينر ) مسئولاً عن أى خسارة مباشرة أو غير مباشرة فى فساد البضاعة من ناحيتك .<br />\r\n<br />\r\nد- لا يمكنك إستخدام الحساب الخاص بشخص آخر بدون إظهار تصريح القبول لحامل الحساب.<br />\r\n<br />\r\nهـ- أن عضويتك تعنى موافقتك على تعويض ( وينر ) عن أى إستخدام غير مشروع لحسابك الخاص عن طريقك أو عن طريق أي شخص آخر يستطيع الوصول للتطبيق والخدمات من خلال استخدام إسم المستخدم الخاص بك ورقمك السري سواء كنت تعلم أو لا تعلم بهذا الإستخدام.<br />\r\n<br />\r\nو- أن تمنحنا معلومات صحيحة ودقيقة وحالية وكاملة عنك كما هو مطلوب فى إستمارة التسجيل (بيانات التسجيل) الخاصة بـ ( وينر ) .<br />\r\n<br />\r\nز- أن لا تضع كلمة &quot; ( وينر ) &quot; في إسم المستخدم الخاص بك.</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<p>&nbsp;</p>', '<p>hello ther ^_^</p>', '<p><span style=\"font-size:18px\">تطبيق فستان أول تطبيق كويتي لعرض وبيع الملابس الجديدة والمستعملة حيث يوفر لك عرض منتجاتك بكل سهولة والتصفح المعروضات والتواصل مع المعلن بضغطة زر</span></p>', 'ardumevbg8l4xsyjpn7q.jpg', '2020-02-05 09:15:45', '2021-10-02 12:26:32', 7, NULL, 'Herage', 'cxzrmshz1eu6uiijlldi.png', 'info@fastan-store.com', '0096566848259', 'Kuwait', 'كويت', 'facebook.com', 'youtube.com', 'twitter.com', 'Fastan_store.com', 'https://www.google.com/maps/@30.0430715,31.4056989,16z', '30.0430715', '31.4056989', 'Fastanstore20.com', 'n', 20, 50.00, '2021-03-09 04:10:00', '2222222', 50.00, '1111111', 3, 365, 'va5jpf5vukmyp2ffgbfi.png', 'wxomesfemvssxk0bxfmv.jpg', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -1878,7 +1927,7 @@ CREATE TABLE `visitors` (
 
 INSERT INTO `visitors` (`id`, `unique_id`, `fcm_token`, `type`, `user_id`, `created_at`, `updated_at`) VALUES
 (1, '2222222', '11111', 1, 112, '2021-02-10 08:52:14', '2021-06-02 14:35:13'),
-(2, 'unique_id', 'test', 2, 103, '2021-02-14 14:33:28', '2021-08-31 20:51:26'),
+(2, 'unique_id', 'test', 2, 111, '2021-02-14 14:33:28', '2021-10-02 16:20:12'),
 (3, '528244d378adc2f4', 'fGcN6kKIQiOirT3ubW9HkN:APA91bE0HGJMDRVT1PM5TvEWqXdPWbHZLvOjByBkkHQgEoKgW-fkXkhuQneySO3xbDw1fbcq32UMDr-plYxIr4NxqimVwepQsxxxb7o2VPsRy09s4NcVsJ8ZebAGCA7hwqpB9TlPFwMD', 2, 106, '2021-03-20 12:37:35', '2021-03-20 12:37:35'),
 (4, 'd17eb533a4012171', 'dC_x-1E2TKealr3Zf-Yf4q:APA91bGi_xB8vAuWcphvMSE4OPv6tCMtJx9-GTfG2C8j2Nem4jOVKoySr4px3qoOS091n7QPX-RexVmWl6T-oeoAkRwrDgsbEu7HwLenmaW8VHTTSbjv12xtD5uMfDfzx-ey2fsfYUQi', 2, 106, '2021-03-20 16:35:36', '2021-03-20 16:35:36'),
 (5, 'a6b555ac991f43f0', 'null', 2, 107, '2021-04-12 11:49:55', '2021-04-12 11:49:55'),
@@ -2086,6 +2135,14 @@ ALTER TABLE `notifications`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `orders_product_id_foreign` (`product_id`),
+  ADD KEY `users_fk` (`user_id`);
+
+--
 -- Indexes for table `participants`
 --
 ALTER TABLE `participants`
@@ -2181,7 +2238,8 @@ ALTER TABLE `rates`
 -- Indexes for table `settings`
 --
 ALTER TABLE `settings`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `city_fk` (`city_id`);
 
 --
 -- Indexes for table `specialties`
@@ -2291,7 +2349,7 @@ ALTER TABLE `admin_permissions`
 -- AUTO_INCREMENT for table `ads`
 --
 ALTER TABLE `ads`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `areas`
@@ -2309,7 +2367,7 @@ ALTER TABLE `balance_packages`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` bigint(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `categories_ads`
@@ -2327,7 +2385,7 @@ ALTER TABLE `category_options`
 -- AUTO_INCREMENT for table `category_option_values`
 --
 ALTER TABLE `category_option_values`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `cities`
@@ -2339,7 +2397,7 @@ ALTER TABLE `cities`
 -- AUTO_INCREMENT for table `contact_us`
 --
 ALTER TABLE `contact_us`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `conversations`
@@ -2387,7 +2445,7 @@ ALTER TABLE `meta_tags`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` bigint(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=257;
+  MODIFY `id` bigint(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=258;
 
 --
 -- AUTO_INCREMENT for table `mndobs`
@@ -2400,6 +2458,12 @@ ALTER TABLE `mndobs`
 --
 ALTER TABLE `notifications`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `participants`
@@ -2429,13 +2493,13 @@ ALTER TABLE `plan_details`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
 
 --
 -- AUTO_INCREMENT for table `product_categories`
 --
 ALTER TABLE `product_categories`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `product_comments`
@@ -2588,6 +2652,13 @@ ALTER TABLE `messages`
   ADD CONSTRAINT `messages_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
+-- Constraints for table `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `users_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
 -- Constraints for table `participants`
 --
 ALTER TABLE `participants`
@@ -2639,6 +2710,12 @@ ALTER TABLE `product_reports`
 --
 ALTER TABLE `product_views`
   ADD CONSTRAINT `product_views_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
+
+--
+-- Constraints for table `settings`
+--
+ALTER TABLE `settings`
+  ADD CONSTRAINT `city_fk` FOREIGN KEY (`city_id`) REFERENCES `cities` (`id`);
 
 --
 -- Constraints for table `sub_categories`

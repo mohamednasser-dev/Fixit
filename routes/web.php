@@ -213,6 +213,10 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
     Route::post('specialty/update/{id}', 'SpecialtyController@update')->name('specialty.update.new');
     Route::get('specialty/delete/{id}' , 'SpecialtyController@destroy')->name("specialty.delete");
 
+    Route::get('offers/show' , 'Ads\AdController@show_offers')->name("offers.show");
+    Route::get('offers/add' , 'Ads\AdController@add_offers')->name("offers.add");
+    Route::post('offers/store' , 'Ads\AdController@AddPost')->name("offers.store");
+
     // Notifications Route
     Route::group(["prefix" => "notifications"], function($router){
         Route::get('show' , 'NotificationController@show');

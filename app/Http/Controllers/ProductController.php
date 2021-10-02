@@ -40,7 +40,7 @@ class ProductController extends Controller
     public function __construct()
     {
         $this->middleware('auth:api', ['except' => ['select_my_ads', 'all_comments', 'make_comment', 'make_report', 'ad_owner_info', 'current_ads', 'ended_ads', 'max_min_price', 'filter', 'offer_ads', 'republish_ad',
-            'areas', 'cities', 'third_step_excute_pay', 'save_third_step_with_money', 'update_ad', 'select_ad_data', 'delete_my_ad',
+            'areas', 'cities','update_city', 'third_step_excute_pay', 'save_third_step_with_money', 'update_ad', 'select_ad_data', 'delete_my_ad',
             'save_third_step', 'save_second_step', 'save_first_step', 'getdetails', 'last_seen', 'getoffers', 'getproducts','map_ads', 'getsearch', 'getFeatureOffers']]);
         //        --------------------------------------------- begin scheduled functions --------------------------------------------------------
         $expired = Product::where('status', 1)->whereDate('expiry_date', '<', Carbon::now())->get();
@@ -1592,10 +1592,26 @@ class ProductController extends Controller
     public function cities(Request $request)
     {
         Session::put('api_lang', $request->lang);
-            $cities = City::where('deleted', '0')
-                ->select('id', 'title_'.$request->lang.' as title')
-                ->get();
+        $settings= Setting::where('id',1)->select('city_id')->first();
+        $cities = City::where('deleted', '0')
+            ->select('id', 'title_'.$request->lang.' as title')
+            ->get()->map(function($data) use($settings){
+                if($settings->city_id == $data->id){
+                    $data->selected = true;
+                }else{
+                    $data->selected = false;
+                }
+                return $data;
+            });
         $response = APIHelpers::createApiResponse(false, 200, '', '', $cities, $request->lang);
+        return response()->json($response, 200);
+    }
+
+    public function update_city(Request $request , $id)
+    {
+        Setting::where('id',1)->update(['city_id'=>$id]);
+        $settings = Setting::find(1);
+        $response = APIHelpers::createApiResponse(false, 200, 'updated successfully', 'تم التعديل بنجاح',null , $request->lang);
         return response()->json($response, 200);
     }
 

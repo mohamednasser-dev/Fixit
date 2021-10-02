@@ -1,6 +1,6 @@
 @extends('admin.app')
 
-@section('title' , __('messages.main_ads_second'))
+@section('title' , __('messages.offers'))
 
 
 @section('content')
@@ -10,12 +10,12 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>{{ __('messages.main_ads_second') }}</h4>
+                        <h4>{{ __('messages.offers') }}</h4>
                     </div>
                 </div>
                 @if(Auth::user()->add_data)
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <a class="btn btn-primary" href="/admin-panel/ads/add">{{ __('messages.add') }}</a>
+                        <a class="btn btn-primary" href="/admin-panel/offers/add">{{ __('messages.add') }}</a>
                     </div>
                 @endif
             </div>

@@ -1,6 +1,6 @@
 @extends('admin.app')
 
-@section('title' , __('messages.add_new_ad'))
+@section('title' , __('messages.add_offers'))
 
 @push('scripts')
 
@@ -46,10 +46,10 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>{{ __('messages.add_new_ad') }}</h4>
+                        <h4>{{ __('messages.add_offers') }}</h4>
                  </div>
         </div>
-        <form action="" method="post" enctype="multipart/form-data" >
+        <form action="{{route('offers.store')}}" method="post" enctype="multipart/form-data" >
             @csrf
 
             <div class="custom-file-container" data-upload-id="myFirstImage">
@@ -78,7 +78,7 @@
                     <option value="2">{{ __('messages.inside_the_app') }}</option>
                 </select>
             </div>
-            <input required type="hidden" name="place" class="form-control" value="1" >
+            <input required type="hidden" name="place" class="form-control" value="3" >
 
             <div style="display: none" class="form-group mb-4 outside">
                 <label for="link">{{ __('messages.link') }}</label>

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
+    protected $appends = ['type'];
     protected $fillable = ['image', 'title_en', 'title_ar', 'deleted','sort'];
 
     public function products() {
@@ -18,5 +19,10 @@ class Category extends Model
                 $qq->has('Products_custom', '>', 0);
             });
         });
+    }
+
+    public function getTypeAttribute()
+    {
+        return 'service';
     }
 }

@@ -5,6 +5,8 @@ return [
 
 
 
+    'offers' => "العروض",
+    'add_offers' => "اضافة عرض جديد",
     'edit_tech' => "تعديل بيانات الفني",
     'description_ar' => "وصف الفني بالعربية",
     'description_en' => "وصف الفني بالانجليزية",

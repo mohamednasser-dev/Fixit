@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Order;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use App\Helpers\APIHelpers;
@@ -16,13 +17,14 @@ use App\Category;
 use App\Product;
 use App\Main_ad;
 use App\Ad;
+use Illuminate\Support\Facades\Validator;
 
 
 class HomeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['city_filter','balance_packages', 'gethome', 'getHomeAds', 'check_ad', 'main_ad']]);
+        $this->middleware('auth:api', ['except' => ['my_orders','add_order','offers','city_filter','balance_packages', 'gethome', 'main_page', 'check_ad', 'main_ad']]);
         //        --------------------------------------------- begin scheduled functions --------------------------------------------------------
             $expired = Product::where('status', 1)->whereDate('expiry_date', '<', Carbon::now())->get();
             foreach ($expired as $row) {
@@ -60,10 +62,35 @@ class HomeController extends Controller
         return response()->json($response, 200);
     }
 
-    public function getHomeAds(Request $request){
+    public function main_page(Request $request){
         $lang = $request->lang;
         $data['slider'] = Ad::select('id', 'image', 'type', 'content')->where('place', 1)->get();
-        $data['services'] = Category::where('deleted', 0)->select('id', 'title_' . $lang . ' as title', 'image')->orderBy('sort', 'asc')->get();
+        $products = Category::where('deleted', 0)->select('id', 'title_' . $lang . ' as title', 'image')
+            ->orderBy('sort', 'asc')->get();
+        $new_ad = [];
+        $ad_data = [];
+        for ($i = 0; $i < count($products); $i++) {
+            if ((($i+1) % 6) == 0) {
+                $ad = Ad::select('id', 'image', 'type', 'content')->where('place', 3)->inRandomOrder()->first();
+                if($ad){
+                    $ad_data['id']= 0;
+                    $ad_data['title'] = $ad->content;
+                    $ad_data['image'] = $ad->image;
+                    $ad_data['type'] = $ad->type;
+                    array_push($new_ad , $products[$i]);
+                    array_push($new_ad , $ad_data);
+                }
+            }else{
+                array_push($new_ad , $products[$i]);
+            }
+        }
+        $data['services'] = $new_ad ;
+        $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
+        return response()->json($response, 200);
+    }
+
+    public function offers(Request $request){
+        $data = Ad::select('id', 'image', 'type', 'content')->where('place', 3)->get();
         $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
         return response()->json($response, 200);
     }
@@ -74,9 +101,7 @@ class HomeController extends Controller
     {
         $data = Main_ad::select('image')->where('deleted', '0')->inRandomOrder()->take(1)->get();
         if (count($data) == 0) {
-            $response = APIHelpers::createApiResponse(true, 406, 'no ads available',
-                'ل
-                 يوجد اعلانات', null, $request->lang);
+            $response = APIHelpers::createApiResponse(true, 406, 'no ads available','لا يوجد اعلانات', null, $request->lang);
             return response()->json($response, 406);
         }
         foreach ($data as $image) {
@@ -139,6 +164,43 @@ class HomeController extends Controller
             $data['show_ad'] = false;
         }
         $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
+        return response()->json($response, 200);
+    }
+    public function add_order(Request $request)
+    {
+        $data = $request->all();
+        $user = auth()->user() ;
+        if (!$user) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login first', 'يجب تسجيل الدخول اولا', (object)[], $request->lang);
+            return response()->json($response, 406);
+        }
+        $validator = Validator::make($data, [
+            'product_id' => 'required|exists:products,id',
+            'price' => 'required',
+            'visit_time' => 'required',
+            'visit_date' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $response = APIHelpers::createApiResponse(true, 406, $validator->errors()->first(), $validator->errors()->first(), (object)[], $request->lang);
+            return response()->json($response, 406);
+        }
+        $data['user_id'] = $user->id;
+        $order = Order::create($data);
+        $response = APIHelpers::createApiResponse(false, 200, '', '', $order, $request->lang);
+        return response()->json($response, 200);
+    }
+    public function my_orders(Request $request)
+    {
+        $lang = $request->lang ;
+        Session::put('api_lang', $lang);
+        $user = auth()->user() ;
+        if (!$user) {
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login first', 'يجب تسجيل الدخول اولا', (object)[], $request->lang);
+            return response()->json($response, 406);
+        }
+        $order = Order::select('id','product_id')->with('Product')->where('user_id',$user->id)->get()->makeHidden(['product_categories']);
+        $response = APIHelpers::createApiResponse(false, 200, '', '', $order, $request->lang);
         return response()->json($response, 200);
     }
 
