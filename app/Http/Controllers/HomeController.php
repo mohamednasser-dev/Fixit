@@ -199,7 +199,8 @@ class HomeController extends Controller
             $response = APIHelpers::createApiResponse(true, 406, 'you should login first', 'يجب تسجيل الدخول اولا', (object)[], $request->lang);
             return response()->json($response, 406);
         }
-        $order = Order::select('id','product_id')->with('Product')->where('user_id',$user->id)->get()->makeHidden(['product_categories']);
+        $order = Order::select('id','product_id')->with('Product')->where('user_id',$user->id)
+            ->get()->makeHidden(['product_categories','Orders_accepted']);
         $response = APIHelpers::createApiResponse(false, 200, '', '', $order, $request->lang);
         return response()->json($response, 200);
     }

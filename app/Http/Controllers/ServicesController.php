@@ -49,8 +49,9 @@ class ServicesController extends Controller
         }
         array_unshift($data['service_categories'], $all);
         if($cat_id == 0){
-            $data['technicians'] = Product::where('city_id',$setting->city_id)->where('category_id',$id)->select('id','title_'.$lang.' as title','main_image as image','category_id')
-                ->get()->makeHidden(['Product_categories']);
+            $data['technicians'] = Product::where('city_id',$setting->city_id)->where('category_id',$id)
+                ->select('id','title_'.$lang.' as title','main_image as image','category_id')
+                ->get()->makeHidden(['Product_categories','Orders_accepted']);
         }else{
             $technicians_data = Product_category::
             with('Product')->with('Category_data')
@@ -68,6 +69,7 @@ class ServicesController extends Controller
                 $prod_cat[$key]['image'] = $row->Product->main_image ;
                 $prod_cat[$key]['category_id'] = $row->Product->category_id ;
                 $prod_cat[$key]['specialties'] = $row->Product->specialties ;
+                $prod_cat[$key]['done_orders'] = $row->Product->done_orders ;
             }
             $data['technicians'] = $prod_cat ;
         }
@@ -80,7 +82,9 @@ class ServicesController extends Controller
         $lang = $request->lang ;
         Session::put('api_lang', $lang);
 
-        $data['technicians'] = Product::where('id',$id)->with('Specialities_data')->select('id','price','title_'.$lang.' as title','description_'.$lang.' as description','main_image as image')->first()->makeHidden(['Product_categories','specialties']);
+        $data['technicians'] = Product::where('id',$id)->with('Specialities_data')
+            ->select('id','price','title_'.$lang.' as title','description_'.$lang.' as description','main_image as image')
+            ->first()->makeHidden(['Product_categories','specialties','Orders_accepted']);
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
         return response()->json($response , 200);
     }
