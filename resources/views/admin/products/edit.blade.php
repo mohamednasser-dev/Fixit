@@ -21,8 +21,16 @@
                     </div>
                     <div class="form-group mb-4">
                         <label for="title">{{ __('messages.tec_name_en') }}</label>
-                        <input required type="text" name="title_en" value="{{$data->title_ar}}" class="form-control"
+                        <input required type="text" name="title_en" value="{{$data->title_en}}" class="form-control"
                                id="title_en">
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="title">{{ __('messages.email') }}</label>
+                        <input required type="email" value="{{$data->email}}" name="email" class="form-control" id="email">
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="title">{{ __('messages.password') }}</label>
+                        <input  type="password" name="password" class="form-control" id="password">
                     </div>
                     <div class="form-group">
                         @php $cats = \App\Category::where('deleted',0)->orderBy('sort','asc')->get(); @endphp
@@ -48,7 +56,7 @@
                     </div>
                     {{--                    // 1--}}
                     <div class="form-group" id="sub_cat_cont">
-                        @php $sub_cats = \App\SubCategory::where('deleted',0)->get(); @endphp
+                        @php $sub_cats = \App\SubCategory::where('category_id',$data->category_id)->where('deleted',0)->get(); @endphp
                         <label for="sel1">{{ __('messages.sub_category_first') }}</label>
                         <select class="form-control tagging" name="categories[]" id="cmb_sub_cat" multiple="multiple">
                             @foreach ($sub_cats as $key => $row)
@@ -87,32 +95,32 @@
                     </div>
                     <div class="form-group mb-4">
                         <label for="price">{{ __('messages.product_price') }}</label>
-                        <input required type="number" class="form-control" step="any" min="0" id="price" name="price"
+                        <input required type="number" value="{{$data->price}}" class="form-control" step="any" min="0" id="price" name="price"
                                placeholder="{{ __('messages.product_price') }}">
                     </div>
                     <div class="form-group mb-4 arabic-direction">
                         <label for="description">{{ __('messages.description_ar') }}</label>
                         <textarea required name="description_ar"
-                                  class="form-control" id="description" rows="5"></textarea>
+                                  class="form-control" id="description" rows="5">{{$data->description_ar}}</textarea>
                     </div>
                     <div class="form-group mb-4 arabic-direction">
-                        <label for="description">{{ __('messages.product_description') }}</label>
+                        <label for="description">{{ __('messages.description_en') }}</label>
                         <textarea required name="description_en"
-                                  class="form-control" id="description" rows="5"> </textarea>
+                                  class="form-control" id="description" rows="5">{{$data->description_en}}</textarea>
                     </div>
                     <div class="custom-file-container" data-upload-id="myFirstImage">
                         <label>{{ __('messages.upload') }} ({{ __('messages.single_image') }}) <a
                                 href="javascript:void(0)" class="custom-file-container__image-clear"
                                 title="Clear Image">x</a></label>
                         <label class="custom-file-container__custom-file">
-                            <input type="file" required name="main_image"
+                            <input type="file" name="main_image"
                                    class="custom-file-container__custom-file__custom-file-input" accept="image/*">
                             <input type="hidden" name="MAX_FILE_SIZE" value="10485760"/>
                             <span class="custom-file-container__custom-file__custom-file-control"></span>
                         </label>
                         <div class="custom-file-container__image-preview"></div>
                     </div>
-                    <input type="submit" value="{{ __('messages.add') }}" class="btn btn-primary">
+                    <input type="submit" value="{{ __('messages.edit') }}" class="btn btn-primary">
                 </form>
             </div>
         </div>

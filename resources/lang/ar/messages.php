@@ -5,6 +5,7 @@ return [
 
 
 
+    'technician_image' => "صورة الفني",
     'offers' => "العروض",
     'add_offers' => "اضافة عرض جديد",
     'edit_tech' => "تعديل بيانات الفني",
@@ -326,7 +327,7 @@ return [
     "ad_place" => "موقع الإعلان",
     "on_the_top" => "فى أعلى الشاشة",
     "on_the_middle" => "فى منتصف الشاشة",
-    "product_details" => "تفاصيل اعلان المستخدم",
+    "product_details" => "تفاصيل الفني",
     "products_count" => "عدد الفنيين",
     "featured_product" => "اعلان مميز",
     "yes" => "نعم",

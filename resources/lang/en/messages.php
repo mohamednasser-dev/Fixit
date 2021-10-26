@@ -3,6 +3,17 @@
         //new
 
 
+        'technician_image' => "technician image",
+        'offers' => "offers",
+        'add_offers' => "add new offer",
+        'edit_tech' => "edit technician data ",
+        'description_ar' => "description in arabic",
+        'description_en' => "description in english",
+        'tec_name_ar' => "technician name in arabic",
+        'tec_name_en' => "technician name in english",
+        'add_new_tech' => "add new technician",
+        'technicians' => "technicians",
+        'show_technicians' => "show technicians",
         'reports' => "reports",
         'expier_days' => "Advertisement expiry days",
         'specialties' => "Specialties",

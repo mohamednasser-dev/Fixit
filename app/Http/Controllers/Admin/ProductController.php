@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Product_category;
 use App\Product_comment;
 use App\Product_report;
+use Illuminate\Support\Facades\Hash;
 use JD\Cloudder\Facades\Cloudder;
 use App\Category_option_value;
 use Illuminate\Http\Request;
@@ -103,6 +104,8 @@ class ProductController extends AdminController
             [
                 'title_ar' => 'required',
                 'title_en' => 'required',
+                'email' => 'required|unique:products,email',
+                'password' => 'required',
                 'category_id' => 'required',
                 'price' => 'required',
                 'city_id' => 'required',
@@ -121,6 +124,7 @@ class ProductController extends AdminController
         }
 
         $data['publish'] = 'Y';
+        $data['password'] = Hash::make($request->password);
         $product = Product::create($data);
 
         foreach ($request->categories as $cat) {
@@ -178,17 +182,14 @@ class ProductController extends AdminController
         $prod = Product::find($id);
         $data = $this->validate(\request(),
             [
-                'user_id' => 'required',
+                'email' => 'required|unique:products,email,'.$id,
+                'title_ar' => 'required',
+                'title_en' => 'required',
                 'category_id' => 'required',
-                'sub_category_id' => 'required',
-                'sub_category_two_id' => '',
-                'sub_category_three_id' => '',
-                'sub_category_four_id' => '',
-                'sub_category_five_id' => '',
-                'title' => 'required',
                 'price' => 'required',
-                'description' => 'required',
-                'plan_id' => 'required',
+                'city_id' => 'required',
+                'description_ar' => '',
+                'description_en' => '',
             ]);
         if ($request->main_image != null) {
             $image = $prod->main_image;
@@ -202,79 +203,15 @@ class ProductController extends AdminController
             $image_new_name = $image_id . '.' . $image_format;
             $data['main_image'] = $image_new_name;
         }
-        if ($prod->plan_id != $request->plan_id) {
-            $selected_plan = Plan::where('id', $request->plan_id)->first();
-            $plan_detail = Plan_details::where('plan_id', $selected_plan->id)->where('type', 'expier_num')->first();
-            $expire_days = $plan_detail->expire_days;
-            //to get the expire_date of ad
-            $mytime = Carbon::now();
-            $today = Carbon::parse($mytime->toDateTimeString())->format('Y-m-d H:i');
-            $date = null;
-            $pin = Plan_details::where('plan_id', $selected_plan->id)->where('type', 'pin')->first();
-            if ($pin != null) {
-                $expire_pin_date = $pin->expire_days;
-                $data['pin'] = 1;
-                //to create expire pin date
-                $final_pin_date = Carbon::createFromFormat('Y-m-d H:i', $today);
-                $final_expire_pin_date = $final_pin_date->addDays($expire_pin_date);
-                $data['expire_pin_date'] = $final_expire_pin_date;
-            }
-            $re_post = Plan_details::where('plan_id', $selected_plan->id)->where('type', 're_post')->first();
-            if ($re_post != null) {
-                $expire_re_post_date = $re_post->expire_days;
-                $data['re_post'] = '1';
-                //to create expire pin date
-                $final_pin_date = Carbon::createFromFormat('Y-m-d H:i', $today);
-                $final_expire_re_post_date = $final_pin_date->addDays($expire_re_post_date);
-                $data['re_post_date'] = $final_expire_re_post_date;
-            }
-            $special = Plan_details::where('plan_id', $selected_plan->id)->where('type', 'special')->first();
-            if ($special != null) {
-                $expire_special_date = $special->expire_days;
-                $data['is_special'] = '1';
-                //to create expire pin date
-                $final_pin_date = Carbon::createFromFormat('Y-m-d H:i', $today);
-                $final_expire_special_date = $final_pin_date->addDays($expire_special_date);
-                $data['expire_special_date'] = $final_expire_special_date;
-            }
-            $final_today = Carbon::createFromFormat('Y-m-d H:i', $today);
-            $expire_date = $final_today->addDays($expire_days);
-            $data['publish'] = 'Y';
-            $data['expiry_date'] = $expire_date;
+        if($request->password != null){
+            $data['password'] = Hash::make($request->password);
         }
         Product::where('id', $id)->update($data);
-        if ($request->images != null) {
-            foreach ($request->images as $image) {
-                $image_name = $image->getRealPath();
-                Cloudder::upload($image_name, null);
-                $imagereturned = Cloudder::getResult();
-                $image_id = $imagereturned['public_id'];
-                $image_format = $imagereturned['format'];
-                $image_new_name = $image_id . '.' . $image_format;
-                $data_image['product_id'] = $id;
-                $data_image['image'] = $image_new_name;
-                ProductImage::create($data_image);
-            }
-        }
-        $selected_brand = Product_feature::where('product_id', $id)->where('option_type', 'marka')->first();
-        if ($request->brand_id != $selected_brand->id) {
-            $selected_brand->target_id = $request->brand_id;
-            $selected_brand->save();
-        }
-        $selected_brand_type = Product_feature::where('product_id', $id)->where('option_type', 'marka_type')->first();
-        if ($request->brand_id != $selected_brand_type->id) {
-            $selected_brand_type->target_id = $request->brand_type_id;
-            $selected_brand_type->save();
-        }
-        $selected_model_year = Product_feature::where('product_id', $id)->where('option_type', 'model_year')->first();
-        if ($request->brand_id != $selected_model_year->id) {
-            $selected_model_year->target_id = $request->model_year_id;
-            $selected_model_year->save();
-        }
-        $selected_counter = Product_feature::where('product_id', $id)->where('option_type', 'counter')->first();
-        if ($request->brand_id != $selected_counter->id) {
-            $selected_counter->target_id = $request->counter_id;
-            $selected_counter->save();
+        Product_category::where('product_id',$id)->delete();
+        foreach ($request->categories as $cat) {
+            $data_cat['product_id'] = $id;
+            $data_cat['cat_id'] = $cat;
+            Product_category::create($data_cat);
         }
         return redirect()->route('products.index');
     }
