@@ -43,26 +43,8 @@ class UserController extends Controller
     public function select_my_data(Request $request)
     {
         $user = auth()->user();
-        $lang = $request->lang;
-        Session::put('api_lang', $lang);
-        $data = User::with('City')->with('Area')->with('Account_type')
-            ->where('id', $user->id)
-            ->select('id', 'name', 'email', 'about_user', 'image', 'cover', 'phone', 'watsapp', 'city_id', 'area_id', 'account_type', 'created_at')
-            ->first();
-        $spec = "";
-        $user_specialties = User_specialty::with('Specialty')
-            ->select('special_id')
-            ->where('user_id', $user->id)->get();
-
-        foreach ($user_specialties as $row) {
-            if ($lang == 'ar') {
-                $spec = $spec . ',' . $row->Specialty->name;
-            } else {
-                $spec = $spec . ',' . $row->Specialty->name;
-            }
-        }
-
-        $data->specialties = $spec;
+        $lang = $request->lang ;
+        $data = User::where('id', $user->id)->select('id', 'name', 'email', 'image', 'phone')->first();
         $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $lang);
         return response()->json($response, 200);
     }
@@ -181,25 +163,16 @@ class UserController extends Controller
         $lang = $request->lang ;
         Session::put('api_lang', $lang);
         $input = $request->all();
-        $user = auth()->user();
         $validator = Validator::make($request->all(), [
             'name' => '',
             'phone' => '',
             "email" => '',
             "image" => '',
-            "city_id" => '',
-            "area_id" => '',
-            "cover" => '',
-            "about_user" => '',
-            "account_type" => '',
-            "specialties" => '',
         ]);
-
         if ($validator->fails()) {
             $response = APIHelpers::createApiResponse(true, 406, $validator->errors()->first(), $validator->errors()->first(), null, $request->lang);
             return response()->json($response, 406);
         }
-
         $currentuser = auth()->user();
         $user_by_phone = User::where('phone', '!=', $currentuser->phone)->where('phone', $request->phone)->first();
         if ($user_by_phone) {
@@ -223,30 +196,8 @@ class UserController extends Controller
         } else {
             unset($input['image']);
         }
-
-        if ($request->cover != null) {
-            $cover = $request->cover;
-            Cloudder::upload("data:image/jpeg;base64," . $cover, null);
-            $imagereturned = Cloudder::getResult();
-            $image_id = $imagereturned['public_id'];
-            $image_format = $imagereturned['format'];
-            $image_new_name = $image_id . '.' . $image_format;
-            $input['cover'] = $image_new_name;
-        } else {
-            unset($input['cover']);
-        }
-        if ($request->specialties != null) {
-            User_specialty::where('user_id', $user->id)->delete();
-            $special_data['user_id'] = $user->id;
-            foreach ($request->specialties as $row) {
-                $special_data['special_id'] = $row;
-                User_specialty::create($special_data);
-            }
-        }
-        unset($input['specialties']);
         User::where('id', $currentuser->id)->update($input);
-
-        $newuser = User::with('Account_type')->find($currentuser->id);
+        $newuser = User::find($currentuser->id);
         $response = APIHelpers::createApiResponse(false, 200, '', '', $newuser, $request->lang);
         return response()->json($response, 200);
     }
@@ -639,7 +590,6 @@ class UserController extends Controller
 
     // nasser code
     public function my_account(Request $request){
-
         $lang = $request->lang;
         $user = auth()->user();
         Session::put('api_lang', $lang);
@@ -668,11 +618,10 @@ class UserController extends Controller
         $products = Product::with('City')->with('Area')->with('Publisher')->where('status', 2)
             ->where('deleted', 0)
             ->where('user_id', auth()->user()->id)
-            ->select('id', 'title', 'main_image as image', 'created_at', 'user_id', 'city_id', 'area_id','retweet')
+            ->select('id', 'title_'.$lang.' as title', 'main_image as image', 'created_at', 'user_id', 'city_id', 'area_id','retweet')
             ->orderBy('created_at', 'desc')
             ->simplePaginate(12);
         for ($i = 0; $i < count($products); $i++) {
-
             if( $products[$i]['retweet_date'] < Carbon::now()){
                 $products[$i]['retweet'] = 1;
             }
@@ -681,7 +630,6 @@ class UserController extends Controller
             } else {
                 $products[$i]['address'] = $products[$i]['City']->title_en . ' , ' . $products[$i]['Area']->title_en;
             }
-
             if ($user) {
                 $favorite = Favorite::where('user_id', $user->id)->where('product_id', $products[$i]['id'])->first();
                 if ($favorite) {
@@ -689,7 +637,6 @@ class UserController extends Controller
                 } else {
                     $products[$i]['favorite'] = false;
                 }
-
                 $conversation = Participant::where('ad_product_id', $products[$i]['id'])->where('user_id', $user->id)->first();
                 if ($conversation == null) {
                     $products[$i]['conversation_id'] = 0;
@@ -706,7 +653,7 @@ class UserController extends Controller
             ->where('publish', 'Y')
             ->where('deleted', 0)
             ->where('user_id', auth()->user()->id)
-            ->select('id', 'title', 'main_image as image', 'created_at', 'user_id', 'city_id', 'area_id','retweet')
+            ->select('id', 'title_'.$lang.' as title', 'main_image as image', 'created_at', 'user_id', 'city_id', 'area_id','retweet')
             ->orderBy('created_at', 'desc')
             ->simplePaginate(12);
         for ($i = 0; $i < count($current_products); $i++) {
