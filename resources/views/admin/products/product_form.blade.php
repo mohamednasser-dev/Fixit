@@ -22,6 +22,14 @@
                         <label for="title">{{ __('messages.tec_name_en') }}</label>
                         <input required type="text" name="title_en" class="form-control" id="title_en">
                     </div>
+                    <div class="form-group mb-4">
+                        <label for="title">{{ __('messages.email') }}</label>
+                        <input required type="email" name="email" class="form-control" id="email">
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="title">{{ __('messages.password') }}</label>
+                        <input required type="password" name="password" class="form-control" id="password">
+                    </div>
                     <div class="form-group">
                         @php $cats = \App\Category::where('deleted',0)->orderBy('sort','asc')->get(); @endphp
                         <label for="sel1">{{ __('messages.category') }}</label>
@@ -75,7 +83,7 @@
                                   class="form-control" id="description" rows="5"></textarea>
                     </div>
                     <div class="form-group mb-4 arabic-direction">
-                        <label for="description">{{ __('messages.product_description') }}</label>
+                        <label for="description">{{ __('messages.description_en') }}</label>
                         <textarea required name="description_en"
                                   class="form-control" id="description" rows="5"></textarea>
                     </div>

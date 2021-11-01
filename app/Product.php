@@ -2,17 +2,31 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Product extends Model
+class Product extends Authenticatable implements JWTSubject
 {
-protected $appends = ['specialties','done_orders'];
-//    protected $dates = ['publication_date'];
-    protected $fillable = ['title_ar','title_en','description_ar','description_en', 'price','category_id','sub_category_id','sub_category_two_id','expire_special_date',
-        'sub_category_three_id','sub_category_four_id','user_id', 'type','publication_date','re_post_date','is_special',
-        'views', 'offer', 'status', 'expiry_date','main_image','expire_pin_date','created_at','plan_id','publish','pin',
-        'sub_category_five_id','choose_it','city_id','area_id','latitude','longitude','share_location','deleted','retweet_date','retweet'];
-    public function category() {
+    protected $appends = ['specialties','done_orders'];
+    //    protected $dates = ['publication_date'];
+    protected $guarded = [];
+
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+     public function category() {
         return $this->belongsTo('App\Category', 'category_id');
     }
     public function Sub_category() {
