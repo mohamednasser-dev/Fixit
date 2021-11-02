@@ -44,6 +44,10 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+        'tech' => [
+            'driver' => 'jwt',
+            'provider' => 'techs',
+        ],
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users',
@@ -73,10 +77,14 @@ return [
             'driver' => 'eloquent',
             'model' => App\User::class,
         ],
+        'techs' => [
+            'driver' => 'eloquent',
+            'model' => App\Product::class,
+        ],
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Admin::class,
-        ], 
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -101,6 +109,12 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'techs' => [
+            'provider' => 'techs',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
