@@ -23,6 +23,10 @@
                         <input required type="text" name="title_en" class="form-control" id="title_en">
                     </div>
                     <div class="form-group mb-4">
+                        <label for="title">{{ __('messages.phone') }}</label>
+                        <input required type="text" name="phone" class="form-control" id="phone">
+                    </div>
+                    <div class="form-group mb-4">
                         <label for="title">{{ __('messages.email') }}</label>
                         <input required type="email" name="email" class="form-control" id="email">
                     </div>

@@ -104,6 +104,7 @@ class ProductController extends AdminController
             [
                 'title_ar' => 'required',
                 'title_en' => 'required',
+                'phone' => 'required',
                 'email' => 'required|unique:products,email',
                 'password' => 'required',
                 'category_id' => 'required',
@@ -185,6 +186,7 @@ class ProductController extends AdminController
                 'email' => 'required|unique:products,email,'.$id,
                 'title_ar' => 'required',
                 'title_en' => 'required',
+                'phone' => 'required',
                 'category_id' => 'required',
                 'price' => 'required',
                 'city_id' => 'required',

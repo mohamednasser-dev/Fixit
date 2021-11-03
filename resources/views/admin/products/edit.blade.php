@@ -21,8 +21,11 @@
                     </div>
                     <div class="form-group mb-4">
                         <label for="title">{{ __('messages.tec_name_en') }}</label>
-                        <input required type="text" name="title_en" value="{{$data->title_en}}" class="form-control"
-                               id="title_en">
+                        <input required type="text" name="title_en" value="{{$data->title_en}}" class="form-control" id="title_en">
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="title">{{ __('messages.phone') }}</label>
+                        <input required type="text" name="phone" value="{{$data->phone}}" class="form-control" id="phone">
                     </div>
                     <div class="form-group mb-4">
                         <label for="title">{{ __('messages.email') }}</label>
