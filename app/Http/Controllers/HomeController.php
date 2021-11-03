@@ -174,6 +174,8 @@ class HomeController extends Controller
     {
         $data = $request->all();
         $user = auth()->user();
+        $lang = $request->lang ;
+        Session::put('api_lang', $lang);
         if (!$user) {
             $response = APIHelpers::createApiResponse(true, 406, 'you should login first', 'يجب تسجيل الدخول اولا', (object)[], $request->lang);
             return response()->json($response, 406);
@@ -208,7 +210,7 @@ class HomeController extends Controller
             return response()->json($response, 406);
         }
         $order = Order::select('id', 'product_id','status','visit_date','visit_time')
-            ->with('Product')->where('user_id', $user->id)->get()->makeHidden(['Product_categories']);
+            ->with('Product')->where('user_id', $user->id)->orderBy('created_at','desc')->get()->makeHidden(['Product_categories']);
 
         $response = APIHelpers::createApiResponse(false, 200, '', '', $order, $request->lang);
         return response()->json($response, 200);
