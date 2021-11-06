@@ -266,5 +266,19 @@ Route::group([
     Route::post('update_profile/{lang}/{v}', 'TechnicianController@update_profile');
 });
 
+// address
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'addresses'
+] , function($router){
+    Route::get('/{lang}/{v}' , 'AddressController@getaddress');
+    Route::post('/{lang}/{v}' , 'AddressController@addaddress');
+    Route::delete('/{lang}/{v}' , 'AddressController@removeaddress');
+    Route::post('/setdefault/{lang}/{v}' , 'AddressController@setmain');
+    Route::get('/getgovernment/{lang}/{v}' , 'AddressController@getgovernment')->middleware('checkguest');
+    Route::get('/getareas/{id}/{lang}/{v}' , 'AddressController@getareas')->middleware('checkguest');
+    Route::get('/details/{id}/{lang}/{v}' , 'AddressController@getdetails');
+});
+
 
 

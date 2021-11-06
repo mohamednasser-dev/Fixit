@@ -12,6 +12,10 @@ class Order extends Model
         return $this->belongsTo('App\Product', 'product_id')->select('id','main_image as image','status','title_'.session('api_lang').' as title');
     }
 
+    public function Address() {
+        return $this->belongsTo('App\UserAddress', 'address_id');
+    }
+
     public function  getVisitTimeAttribute($data){
         return Carbon::createFromFormat('H:i:s', $data)->format('g:i a');
     }
@@ -22,10 +26,5 @@ class Order extends Model
             return Carbon::createFromFormat('Y-m-d', $data)->format('Y F d l');
         }
     }
-    public function City() {
-        return $this->belongsTo('App\City', 'city_id')->select('id','title_'.session('api_lang').' as title');
-    }
-    public function Area() {
-        return $this->belongsTo('App\Area', 'area_id')->select('id','title_'.session('api_lang').' as title');
-    }
+
 }

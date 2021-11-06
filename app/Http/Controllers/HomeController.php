@@ -185,10 +185,7 @@ class HomeController extends Controller
             'price' => 'required',
             'visit_time' => 'required',
             'visit_date' => 'required',
-            'city_id' => 'required',
-            'area_id' => 'required',
-            'latitude' => '',
-            'longitude' => '',
+            'address_id' => 'required'
         ]);
         if ($validator->fails()) {
             $response = APIHelpers::createApiResponse(true, 406, $validator->errors()->first(), $validator->errors()->first(), (object)[], $request->lang);
