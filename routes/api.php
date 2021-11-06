@@ -238,6 +238,9 @@ Route::get('/product/update_city/{id}/{lang}/{v}', 'ProductController@update_cit
 Route::get('/ad/areas/{city_id}/{lang}/{v}', 'ProductController@areas');
 Route::get('/home/city_filter/{area_id}/{lang}/{v}', 'HomeController@city_filter')->middleware('checkguest');
 
+Route::get('/ad/cities/{lang}/{v}' , 'ProductController@cities')->middleware('checkguest');
+Route::get('/ad/areas/{city_id}/{lang}/{v}' , 'ProductController@areas')->middleware('checkguest');
+
 
 Route::get('/ad/last_seen/{lang}/{v}', 'ProductController@last_seen');
 Route::get('/ad/offer_ads/{lang}/{v}', 'ProductController@offer_ads');
