@@ -13,7 +13,7 @@ class Order extends Model
     }
 
     public function Address() {
-        return $this->belongsTo('App\UserAddress', 'address_id');
+        return $this->belongsTo('App\UserAddress', 'address_id')->with('area');
     }
 
     public function  getVisitTimeAttribute($data){
