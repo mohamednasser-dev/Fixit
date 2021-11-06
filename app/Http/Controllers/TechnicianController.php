@@ -127,7 +127,7 @@ unset($input['main_image']);
             $response = APIHelpers::createApiResponse(true, 406, 'you should login first', 'يجب تسجيل الدخول اولا', (object)[], $request->lang);
             return response()->json($response, 406);
         }
-        $order = Order::select('id', 'product_id','status','visit_date','visit_time')
+        $order = Order::with(['City','Area'])->select('id', 'product_id','status','visit_date','visit_time','city_id','area_id')
             ->with('Product')->where('product_id', $user->id)->get()->makeHidden(['Product_categories']);
 
         $response = APIHelpers::createApiResponse(false, 200, '', '', $order, $request->lang);
