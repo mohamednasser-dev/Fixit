@@ -17,7 +17,7 @@
             <div class="form-group mb-4">
                 <label for="plan_price">{{ __('messages.name_ar') }}</label>
                 <input required type="text" name="title_ar" class="form-control" >
-                <input required type="hidden" name="city_id" value="{{$id}}" class="form-control" >
+                <input required type="hidden" name="governorate_id" value="{{$id}}" class="form-control" >
             </div>
             <div class="form-group mb-4">
                 <label for="plan_price">{{ __('messages.name_en') }}</label>

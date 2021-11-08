@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Governorate;
 use Illuminate\Http\Request;
 use App\City;
 use App\Area;
@@ -15,7 +16,7 @@ class CityController extends AdminController
      */
     public function index()
     {
-        $data = City::where('deleted','0')->OrderBy('id','desc')->get();
+        $data = Governorate::where('deleted','0')->OrderBy('id','desc')->get();
         return view('admin.cities.index', compact('data'));
     }
 
@@ -37,7 +38,7 @@ class CityController extends AdminController
             'title_ar' => 'required',
             'title_en' => 'required'
         ]);
-        City::create($data);
+        Governorate::create($data);
         session()->flash('success', trans('messages.added_s'));
         return redirect( route('cities.index'));
     }
@@ -62,7 +63,7 @@ class CityController extends AdminController
      * @return \Illuminate\Http\Response
      */
     public function edit($id) {
-        $data = City::findOrFail($id)->first();
+        $data = Governorate::find($id);
         return view('admin.cities.edit', compact('data'));
     }
     public function update(Request $request, $id) {
@@ -71,7 +72,7 @@ class CityController extends AdminController
                 'title_ar' => 'required',
                 'title_en' => 'required'
             ]);
-        City::findOrFail($id)->update($data);
+        Governorate::findOrFail($id)->update($data);
         session()->flash('success', trans('messages.updated_s'));
         return redirect( route('cities.index'));
     }
@@ -79,7 +80,7 @@ class CityController extends AdminController
     public function destroy($id)
     {
         $data['deleted'] = '1';
-        City::findOrFail($id)->update($data);
+        Governorate::findOrFail($id)->update($data);
         session()->flash('success', trans('messages.deleted_s'));
         return back();
     }
@@ -97,14 +98,14 @@ class CityController extends AdminController
         [
             'title_ar' => 'required',
             'title_en' => 'required',
-            'city_id' => 'required'
+            'governorate_id' => 'required'
         ]);
         Area::create($data);
         session()->flash('success', trans('messages.added_s'));
         return redirect( route('cities.show',$request->city_id));
     }
     public function edit_area($id) {
-        $data = Area::findOrFail($id)->first();
+        $data = Area::find($id);
         return view('admin.cities.areas.edit', compact('data'));
     }
     public function update_area(Request $request, $id) {
