@@ -70,17 +70,18 @@
 {{--                    <option value="3">{{ __('messages.on_the_bottom') }}</option>--}}
 {{--                </select>--}}
 {{--            </div>--}}
-            <div class="form-group">
-                <label for="sel1">{{ __('messages.ad_type') }}</label>
-                <select id="ad_type" name="type" class="form-control">
-                    <option selected>{{ __('messages.select') }}</option>
-                    <option value="1">{{ __('messages.outside_the_app') }}</option>
-                    <option value="2">{{ __('messages.inside_the_app') }}</option>
-                </select>
-            </div>
+{{--            <div class="form-group">--}}
+{{--                <label for="sel1">{{ __('messages.ad_type') }}</label>--}}
+{{--                <select id="ad_type" name="type" class="form-control">--}}
+{{--                    <option selected>{{ __('messages.select') }}</option>--}}
+{{--                    <option value="1">{{ __('messages.outside_the_app') }}</option>--}}
+{{--                    <option value="2">{{ __('messages.inside_the_app') }}</option>--}}
+{{--                </select>--}}
+{{--            </div>--}}
             <input required type="hidden" name="place" class="form-control" value="3" >
+            <input required type="hidden" name="type" class="form-control" value="1" >
 
-            <div style="display: none" class="form-group mb-4 outside">
+            <div class="form-group mb-4 outside">
                 <label for="link">{{ __('messages.link') }}</label>
                 <input required type="text" name="content" class="form-control" id="link" placeholder="{{ __('messages.link') }}" value="" >
             </div>

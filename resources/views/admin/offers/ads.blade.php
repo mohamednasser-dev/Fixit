@@ -51,7 +51,7 @@
                                         </td>
                                         @if(Auth::user()->update_data)
                                             <td class="text-center blue-color"><a
-                                                    href="/admin-panel/ads/edit/{{ $ad->id }}"><i
+                                                    href="/admin-panel/offers/edit/{{ $ad->id }}"><i
                                                         class="far fa-edit"></i></a></td>
                                         @endif
                                         @if(Auth::user()->delete_data)

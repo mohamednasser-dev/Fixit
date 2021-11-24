@@ -56,6 +56,10 @@ class AdController extends AdminController{
         $data['users'] = User::orderBy('created_at', 'desc')->get();
         return view('admin.offers.ad_form', ["data" => $data]);
     }
+    public function edit_offers($id){
+        $data['ad'] = Ad::find($id);
+        return view('admin.offers.ad_edit', ["data" => $data]);
+    }
 
     // get edit page
     public function EditGet(Request $request){
@@ -97,6 +101,32 @@ class AdController extends AdminController{
         $ad->save();
         session()->flash('success', trans('messages.updated_s'));
         return redirect('admin-panel/ads/show');
+    }
+    public function EditPost_offer(Request $request){
+        $ad = Ad::find($request->id);
+        if($request->file('image')){
+            $image = $ad->image;
+            $publicId = substr($image, 0 ,strrpos($image, "."));
+            // Cloudder::delete($publicId);
+            $image_name = $request->file('image')->getRealPath();
+            Cloudder::upload($image_name, null);
+            $imagereturned = Cloudder::getResult();
+            $image_id = $imagereturned['public_id'];
+            $image_format = $imagereturned['format'];
+            $image_new_name = $image_id.'.'.$image_format;
+            $ad->image = $image_new_name;
+        }
+        if ($request->input('type') == 1) {
+            $ad->type = "link";
+        }else {
+            $ad->type = "id";
+        }
+        $ad->content = $request->content;
+        $ad->place = $request->place;
+        // dd($ad);
+        $ad->save();
+        session()->flash('success', trans('messages.updated_s'));
+        return redirect('admin-panel/offers/show');
     }
 
     public function details(Request $request){

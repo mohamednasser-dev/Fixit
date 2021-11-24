@@ -214,6 +214,8 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
     Route::get('specialty/delete/{id}' , 'SpecialtyController@destroy')->name("specialty.delete");
 
     Route::get('offers/show' , 'Ads\AdController@show_offers')->name("offers.show");
+    Route::get('offers/edit/{id}' , 'Ads\AdController@edit_offers')->name("offers.edit");
+    Route::post('offers/update' , 'Ads\AdController@EditPost_offer')->name("offers.update");
     Route::get('offers/add' , 'Ads\AdController@add_offers')->name("offers.add");
     Route::post('offers/store' , 'Ads\AdController@AddPost')->name("offers.store");
 
