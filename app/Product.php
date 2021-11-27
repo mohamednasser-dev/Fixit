@@ -7,7 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Product extends Authenticatable implements JWTSubject
 {
-    protected $appends = ['specialties','done_orders'];
+    protected $appends = ['specialties','done_orders','rate'];
     //    protected $dates = ['publication_date'];
     protected $guarded = [];
 
@@ -130,5 +130,17 @@ class Product extends Authenticatable implements JWTSubject
         }else{
             return $this->belongsTo('App\Area', 'area_id')->select('id','title_en as title');
         }
+    }
+
+
+    public function getRateAttribute($image)
+    {
+        $count_rates = Rate::where('order_id',$this->id)->get()->count();
+        if($count_rates == 0){
+            return 0 ;
+        }
+        $sum_rates = Rate::where('order_id',$this->id)->get()->sum('rate');
+        $rate = $sum_rates / $count_rates;
+        return $rate ;
     }
 }

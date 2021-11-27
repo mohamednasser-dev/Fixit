@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Category;
 use App\Product;
 use App\Product_category;
+use App\Rate;
 use App\Setting;
 use App\SubCategory;
 use Illuminate\Support\Facades\Session;
@@ -18,7 +19,7 @@ class ServicesController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api' , ['except' => [ 'details','technician_details']]);
+        $this->middleware('auth:api' , ['except' => [ 'details','technician_details','make_rate']]);
     }
 
     public function details(Request $request , $id , $cat_id){
@@ -88,5 +89,36 @@ class ServicesController extends Controller
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
         return response()->json($response , 200);
     }
-
+    public function make_rate(Request $request ){
+        $lang = $request->lang ;
+        $user = auth()->user() ;
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'technician_id' => 'required|exists:products,id',
+            'rate' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $response = APIHelpers::createApiResponse(true, 406, $validator->messages()->first(), $validator->messages()->first(), null, $request->lang);
+            return response()->json($response, 406);
+        } else {
+            if($user){
+                $exists_rate = Rate::where('user_id',$user->id)->where('order_id',$request->technician_id)->first();
+                if($exists_rate){
+                    $response = APIHelpers::createApiResponse(true, 406,'this technician rated before', 'تم تقييم هذا الفني من قبل', null, $request->lang);
+                    return response()->json($response, 406);
+                }else{
+                    $data['rate'] = $request->rate ;
+                    $data['user_id'] = $user->id ;
+                    $data['admin_approval'] = 1 ;
+                    $data['order_id'] = $request->technician_id ;
+                    Rate::create($data);
+                    $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
+                    return response()->json($response, 200);
+                }
+            }else{
+                $response = APIHelpers::createApiResponse(true, 406,'you should login first', 'يجب تسجيل الدخول', null, $request->lang);
+                return response()->json($response, 406);
+            }
+        }
+    }
 }

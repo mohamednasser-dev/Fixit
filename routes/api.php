@@ -178,6 +178,7 @@ Route::post('/ad/save_second_step/{lang}/{v}', 'ProductController@save_second_st
 
 Route::get('/service/details/{id}/{cat_id}/{lang}/{v}', 'ServicesController@details');
 Route::get('/service/technician_details/{id}/{lang}/{v}', 'ServicesController@technician_details');
+Route::post('/service/technician/rate/{lang}/{v}', 'ServicesController@make_rate');
 
 Route::get('/ad/select_all_plans/{cat_id}/{lang}/{v}', 'PlanController@select_all_plans');
 Route::get('/ad/save_third_step/{ad_id}/{plan_id}/{lang}/{v}', 'ProductController@save_third_step');
