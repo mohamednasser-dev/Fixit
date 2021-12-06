@@ -4,7 +4,7 @@ return [
 
 
 
-
+    'category_options_edit' => "تعديل خيارات القسم",
     'technician_image' => "صورة الفني",
     'offers' => "العروض",
     'add_offers' => "اضافة عرض جديد",

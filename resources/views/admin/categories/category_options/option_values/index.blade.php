@@ -2,7 +2,6 @@
 @section('title' , __('messages.list_values'))
 @section('content')
     <div id="tableSimple" class="col-lg-12 col-12 layout-spacing">
-
         <div class="statbox widget box box-shadow">
             <div class="widget-header">
                 <div class="row">
