@@ -8,6 +8,7 @@ use App\Product_category;
 use App\Rate;
 use App\Setting;
 use App\SubCategory;
+use App\User;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
@@ -25,7 +26,12 @@ class ServicesController extends Controller
     public function details(Request $request , $id , $cat_id){
         $lang = $request->lang ;
         Session::put('api_lang', $lang);
-        $setting = Setting::find(1);
+        $user = auth()->user();
+        if($user == null){
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login first', 'يجب تسجيل الدخول اولا', null, $request->lang);
+            return response()->json($response, 406);
+        }
+        $setting = User::where('id',$user->id)->select('city_id')->first();
         $prod_cat = [];
         $data['service_categories'] = SubCategory::where('category_id',$id)->select('id','title_'.$lang.' as title')
             ->orderBy('sort', 'asc')->get()->toArray();
