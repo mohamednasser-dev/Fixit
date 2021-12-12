@@ -60,7 +60,7 @@ class Product extends Authenticatable implements JWTSubject
         return $this->hasMany('App\Product_category', 'product_id');
     }
     public function City() {
-        return $this->belongsTo('App\City', 'city_id');
+        return $this->belongsTo('App\Governorate', 'city_id');
     }
     public function Area() {
         return $this->belongsTo('App\Area', 'area_id');
