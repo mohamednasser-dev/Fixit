@@ -52,7 +52,7 @@ class CityController extends AdminController
     public function show($id)
     {
         $city_id = $id;
-        $data = Area::where('city_id',$id)->where('deleted','0')->OrderBy('id','desc')->get();
+        $data = Area::where('governorate_id',$id)->where('deleted',0)->OrderBy('id','desc')->get();
         return view('admin.cities.areas.index', compact('data','city_id'));
     }
 
@@ -102,7 +102,7 @@ class CityController extends AdminController
         ]);
         Area::create($data);
         session()->flash('success', trans('messages.added_s'));
-        return redirect( route('cities.show',$request->city_id));
+        return redirect( route('cities.show',$request->governorate_id));
     }
     public function edit_area($id) {
         $data = Area::find($id);
@@ -117,7 +117,7 @@ class CityController extends AdminController
         Area::findOrFail($id)->update($data);
         $area = Area::where('id',$id)->first();
         session()->flash('success', trans('messages.updated_s'));
-        return redirect( route('cities.show',$area->city_id));
+        return redirect( route('cities.show',$area->governorate_id));
     }
     public function destroy_area($id)
     {

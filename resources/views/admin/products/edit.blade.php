@@ -75,7 +75,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        @php $cities = \App\City::where('deleted','0')->orderBy('created_at','asc')->get(); @endphp
+                        @php $cities = \App\Governorate::where('deleted',0)->orderBy('created_at','asc')->get(); @endphp
                         <label for="sel1">{{ __('messages.city') }}</label>
                         <select required class="form-control" name="city_id" id="cmb_city_id">
                             <option selected disabled>{{ __('messages.choose_city') }}</option>

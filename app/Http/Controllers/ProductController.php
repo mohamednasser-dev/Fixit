@@ -6,6 +6,7 @@ use App\Category;
 use App\ContactUs;
 use App\Conversation;
 use App\Category_option;
+use App\Governorate;
 use App\Models\Student;
 use App\Participant;
 use App\Product_comment;
@@ -1592,8 +1593,13 @@ class ProductController extends Controller
     public function cities(Request $request)
     {
         Session::put('api_lang', $request->lang);
-        $settings= Setting::where('id',1)->select('city_id')->first();
-        $cities = City::where('deleted', '0')
+        $user = auth()->user();
+        if($user == null){
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login first', 'يجب تسجيل الدخول اولا', null, $request->lang);
+            return response()->json($response, 406);
+        }
+        $settings= User::where('id',$user->id)->select('city_id')->first();
+        $cities = Governorate::where('deleted', 0)
             ->select('id', 'title_'.$request->lang.' as title')
             ->get()->map(function($data) use($settings){
                 if($settings->city_id == $data->id){
@@ -1609,8 +1615,13 @@ class ProductController extends Controller
 
     public function update_city(Request $request , $id)
     {
-        Setting::where('id',1)->update(['city_id'=>$id]);
-        $settings = Setting::find(1);
+        $user = auth()->user();
+        if($user == null){
+            $response = APIHelpers::createApiResponse(true, 406, 'you should login first', 'يجب تسجيل الدخول اولا', null, $request->lang);
+            return response()->json($response, 406);
+        }
+        User::where('id',$user->id)->update(['city_id'=>$id]);
+        User::find($user->id);
         $response = APIHelpers::createApiResponse(false, 200, 'updated successfully', 'تم التعديل بنجاح',null , $request->lang);
         return response()->json($response, 200);
     }
@@ -1621,11 +1632,11 @@ class ProductController extends Controller
 
         $areas = [];
         if ($request->lang == 'en') {
-            $areas = Area::where('city_id',$city_id)->where('deleted', '0')
+            $areas = Area::where('governorate_id',$city_id)->where('deleted', 0)
                 ->select('id', 'title_en as title')
                 ->get();
         } else {
-            $areas = Area::where('city_id',$city_id)->where('deleted', '0')
+            $areas = Area::where('governorate_id',$city_id)->where('deleted', 0)
                 ->select('id', 'title_ar as title')
                 ->get();
         }
