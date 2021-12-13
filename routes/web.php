@@ -359,3 +359,4 @@ Route::group([
     Route::get('aboutapp/{lang}' , 'WebViewController@getabout');
     Route::get('termsandconditions/{lang}' , 'WebViewController@gettermsandconditions' );
 });
+Route::get('/' ,'WebViewController@homePage');

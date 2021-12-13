@@ -24,4 +24,8 @@ class WebViewController extends Controller
 		$data['lang'] = $lang;
         return view('webview.termsandconditions' , ['data' => $data]);
     }
+
+    public function homePage() {
+        return view('index');
+    }
 }
