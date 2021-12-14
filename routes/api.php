@@ -276,6 +276,7 @@ Route::group([
     Route::post('/{lang}/{v}' , 'AddressController@addaddress');
     Route::delete('/{lang}/{v}' , 'AddressController@removeaddress');
     Route::post('/setdefault/{lang}/{v}' , 'AddressController@setmain');
+    Route::put('/update/{lang}/{v}' , 'AddressController@updateAddress');
     Route::get('/getgovernment/{lang}/{v}' , 'AddressController@getgovernment')->middleware('checkguest');
     Route::get('/getareas/{id}/{lang}/{v}' , 'AddressController@getareas')->middleware('checkguest');
     Route::get('/details/{id}/{lang}/{v}' , 'AddressController@getdetails');
