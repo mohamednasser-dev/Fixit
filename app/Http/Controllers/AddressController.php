@@ -197,5 +197,31 @@ class AddressController extends Controller
         return response()->json($response , 200);
     }
 
+    // update address
+    public function updateAddress(Request $request) {
+        if ($request->lang == 'en') {
+            $messages = [
+                'address_id.required' => "Address id is required field"
+            ];
+        }else {
+            $messages = [
+                'address_id.required' => "Address id حقل مطلوب"
+            ];
+        }
+        
+        $validator = Validator::make($request->all(), [
+            'address_id' => 'required'
+        ], $messages);
+        if ($validator->fails()) {
+            $response = APIHelpers::createApiResponse(true , 406 , $validator->messages()->first() , $validator->messages()->first()  , null , $request->lang);
+            return response()->json($response , 406);
+        }
+        $address = UserAddress::find($request->address_id);
+
+        $address->update($request->all());
+
+        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $address , $request->lang);
+        return response()->json($response , 200);
+    }
 
 }
