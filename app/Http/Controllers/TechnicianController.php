@@ -30,7 +30,7 @@ class TechnicianController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','select_my_data','update_profile','my_orders','change_status']]);
+        $this->middleware('auth:api', ['except' => ['login', 'select_my_data', 'update_profile', 'my_orders', 'change_status']]);
     }
 
     public function login(Request $request)
@@ -65,59 +65,88 @@ class TechnicianController extends Controller
     public function select_my_data(Request $request)
     {
         $user = auth::guard('tech')->user();
-        $lang = $request->lang ;
+        $lang = $request->lang;
         $data = Product::where('id', $user->id)
-            ->select('id', 'title_ar','title_en','description_ar','description_en', 'email', 'main_image', 'phone','price')
-            ->first()->makeHidden(['Product_categories','Orders_accepted']);
+            ->select('id', 'title_ar', 'title_en', 'description_ar', 'description_en', 'email', 'main_image', 'phone', 'price')
+            ->first()->makeHidden(['Product_categories', 'Orders_accepted']);
         $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $lang);
         return response()->json($response, 200);
     }
-    public function change_order_status(Request $request,$order_id,$status)
+
+    public function change_order_status(Request $request, $order_id, $status)
     {
         $user = auth::guard('tech')->user();
-        $lang = $request->lang ;
-        $data = Order::where('product_id',$user->id)->where('id', $order_id)->first();
-        if($data){
-            Order::where('product_id',$user->id)->where('id', $order_id)->update(['status'=>$status]);
+        $lang = $request->lang;
+        $data = Order::where('product_id', $user->id)->where('id', $order_id)->first();
+        if ($data) {
+            Order::where('product_id', $user->id)->where('id', $order_id)->update(['status' => $status]);
         }
         $response = APIHelpers::createApiResponse(false, 200, 'order status changes successfully', 'تم تغير حالة الطلب بنجاح', null, $lang);
         return response()->json($response, 200);
     }
+
     public function update_profile(Request $request)
     {
-        $lang = $request->lang ;
+        $lang = $request->lang;
         Session::put('api_lang', $lang);
         $currentuser = auth::guard('tech')->user();
         $input = $request->all();
-        $validator = Validator::make($request->all(), [
-            'title_ar' => '',
-            'title_en' => '',
-            "phone" => 'unique:products,phone,'.$currentuser->id,
-            "email" => 'unique:products,email,'.$currentuser->id,
-            "main_image" => '',
-            "description_ar" => '',
-            "description_en" => '',
-        ]);
+        if ($request->phone) {
+            $validator = Validator::make($request->all(), [
+                "phone" => 'unique:products,phone,' . $currentuser->id,
+            ]);
+        }
+        if ($request->email) {
+            $validator = Validator::make($request->all(), [
+                "email" => 'unique:products,email,' . $currentuser->id,
+            ]);
+        }
+        if ($request->description_ar || $request->description_en || $request->title_ar || $request->title_en ) {
+            $validator = Validator::make($request->all(), [
+                "title_en" => '',
+                "title_ar" => '',
+                "description_ar" => '',
+                "description_en" => '',
+            ]);
+        }
         if ($validator->fails()) {
             $response = APIHelpers::createApiResponse(true, 406, $validator->errors()->first(), $validator->errors()->first(), null, $request->lang);
             return response()->json($response, 406);
         }
+
         if ($request->main_image != null) {
             $image = $request->main_image;
             Cloudder::upload("data:image/jpeg;base64," . $image, null);
             $imagereturned = Cloudder::getResult();
             $image_id = $imagereturned['public_id'];
             $image_format = $imagereturned['format'];
-        $image_new_name = $image_id . '.' . $image_format;
-        $input['main_image'] = $image_new_name;
-    } else {
-unset($input['main_image']);
-}
+            $image_new_name = $image_id . '.' . $image_format;
+            $input['main_image'] = $image_new_name;
+        }
+        if($request->phone){
+            $input['phone'] = $request->phone;
+        }
+        if($request->email){
+            $input['email'] = $request->email;
+        }
+        if($request->description_ar){
+            $input['description_ar'] = $request->description_ar;
+        }
+        if($request->description_en){
+            $input['description_en'] = $request->description_en;
+        }
+        if($request->title_ar){
+            $input['title_ar'] = $request->title_ar;
+        }
+        if($request->title_en){
+            $input['title_en'] = $request->title_en;
+        }
         Product::where('id', $currentuser->id)->update($input);
         $newuser = Product::find($currentuser->id);
         $response = APIHelpers::createApiResponse(false, 200, '', '', $newuser, $request->lang);
         return response()->json($response, 200);
     }
+
     public function my_orders(Request $request)
     {
         $lang = $request->lang;
@@ -127,7 +156,7 @@ unset($input['main_image']);
             $response = APIHelpers::createApiResponse(true, 406, 'you should login first', 'يجب تسجيل الدخول اولا', (object)[], $request->lang);
             return response()->json($response, 406);
         }
-        $order = Order::with(['Address'])->select('id', 'product_id','status','visit_date','visit_time','address_id')
+        $order = Order::with(['Address'])->select('id', 'product_id', 'status', 'visit_date', 'visit_time', 'address_id')
             ->with('Product')->where('product_id', $user->id)->get()->makeHidden(['Product_categories']);
 
         $response = APIHelpers::createApiResponse(false, 200, '', '', $order, $request->lang);
