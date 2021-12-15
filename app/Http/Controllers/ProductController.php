@@ -1592,23 +1592,24 @@ class ProductController extends Controller
 
     public function cities(Request $request)
     {
-        Session::put('api_lang', $request->lang);
-        $user = auth()->user();
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true, 406, 'you should login first', 'يجب تسجيل الدخول اولا', null, $request->lang);
-            return response()->json($response, 406);
-        }
-        $settings= User::where('id',$user->id)->select('city_id')->first();
+        // Session::put('api_lang', $request->lang);
+        // $user = auth()->user();
+        // if($user == null){
+        //     $response = APIHelpers::createApiResponse(true, 406, 'you should login first', 'يجب تسجيل الدخول اولا', null, $request->lang);
+        //     return response()->json($response, 406);
+        // }
+        // $settings= User::where('id',$user->id)->select('city_id')->first();
         $cities = Governorate::where('deleted', 0)
             ->select('id', 'title_'.$request->lang.' as title')
-            ->get()->map(function($data) use($settings){
-                if($settings->city_id == $data->id){
-                    $data->selected = true;
-                }else{
-                    $data->selected = false;
-                }
-                return $data;
-            });
+            ->get();
+            // ->map(function($data) use($settings){
+            //     if($settings->city_id == $data->id){
+            //         $data->selected = true;
+            //     }else{
+            //         $data->selected = false;
+            //     }
+            //     return $data;
+            // });
         $response = APIHelpers::createApiResponse(false, 200, '', '', $cities, $request->lang);
         return response()->json($response, 200);
     }
