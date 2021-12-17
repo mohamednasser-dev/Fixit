@@ -26,12 +26,8 @@ class ServicesController extends Controller
     public function details(Request $request , $id , $cat_id){
         $lang = $request->lang ;
         Session::put('api_lang', $lang);
-        $user = auth()->user();
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true, 406, 'you should login first', 'يجب تسجيل الدخول اولا', null, $request->lang);
-            return response()->json($response, 406);
-        }
-        $setting = User::where('id',$user->id)->select('city_id')->first();
+        
+        
         $prod_cat = [];
         $data['service_categories'] = SubCategory::where('category_id',$id)->select('id','title_'.$lang.' as title')
             ->orderBy('sort', 'asc')->get()->toArray();
@@ -56,15 +52,13 @@ class ServicesController extends Controller
         }
         array_unshift($data['service_categories'], $all);
         if($cat_id == 0){
-            $data['technicians'] = Product::where('city_id',$setting->city_id)->where('category_id',$id)
+            $data['technicians'] = Product::where('category_id',$id)
                 ->select('id','title_'.$lang.' as title','main_image as image','category_id')
                 ->get()->makeHidden(['Product_categories','Orders_accepted']);
         }else{
             $technicians_data = Product_category::
             with('Product')->with('Category_data')
-            ->whereHas('Product',function ($q) use($setting){
-                $q->where('city_id',$setting->city_id);
-            })->where('cat_id',$cat_id)->get();
+            ->where('cat_id',$cat_id)->get();
             foreach ($technicians_data as $key => $row){
                 $prod_cat[$key]['id'] = $row->product_id ;
                 if($lang == 'ar'){
