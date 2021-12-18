@@ -247,6 +247,8 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
         Route::get('product_comments/{id}', 'ProductController@product_comments')->name("product.comments");
         Route::get('comments/approval/{type}/{id}', 'ProductController@comment_approval')->name("comment.approve");
         Route::get('add' , 'ProductController@AddGet');
+        Route::get('join_requests' , 'ProductController@join_requests');
+        Route::get('change_status/{type}/{id}' , 'ProductController@acception')->name('product.acception');
         Route::post('add' , 'ProductController@AddPost')->name("products.store");
         Route::get('edit/{id}' , 'ProductController@edit')->name("products.edit");
         Route::post('edit/{id}' , 'ProductController@EditPost')->name("products.update");

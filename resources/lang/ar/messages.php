@@ -4,6 +4,9 @@ return [
 
 
 
+    'acception' => "الموافقه",
+    'actions' => "الاجرائات",
+    'join_requests' => "طلبات الانضمام",
     'category_options_edit' => "تعديل خيارات القسم",
     'technician_image' => "صورة الفني",
     'offers' => "العروض",

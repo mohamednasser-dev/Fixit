@@ -30,8 +30,20 @@ class ProductController extends AdminController
     // show
     public function show()
     {
-        $data['products'] = Product::where('deleted', 0)->orderBy('id', 'desc')->get();
+        $data['products'] = Product::where('deleted', 0)->where('publish','Y')->orderBy('id', 'desc')->get();
         return view('admin.products.products', ['data' => $data]);
+    }
+    public function join_requests()
+    {
+        $data['products'] = Product::where('deleted', 0)->where('publish','N')->orderBy('id', 'desc')->get();
+        return view('admin.products.join_requests', ['data' => $data]);
+    }
+    public function acception($type, $id)
+    {
+        $data['publish'] = $type;
+        Product::where('id', $id)->update($data);
+        session()->flash('success', trans('messages.status_changed'));
+        return back();
     }
 
 

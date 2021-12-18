@@ -92,6 +92,9 @@
                             <li class="show">
                                 <a href="/admin-panel/products/show">{{ __('messages.show') }}</a>
                             </li>
+                            <li class="join_requests">
+                                <a href="/admin-panel/products/join_requests">{{ __('messages.join_requests') }}</a>
+                            </li>
 {{--                            <li class="reports">--}}
 {{--                                <a href="/admin-panel/products/comments">{{ __('messages.reports') }}--}}
 {{--                                    @if( $reports_count> 0 )--}}

@@ -9,7 +9,7 @@ class Product_category extends Model
     protected $fillable = [ 'product_id','cat_id'];
 
     public function Product() {
-        return $this->belongsTo('App\Product', 'product_id');
+        return $this->belongsTo('App\Product', 'product_id')->where('publish','Y');
     }
 
     public function Category() {

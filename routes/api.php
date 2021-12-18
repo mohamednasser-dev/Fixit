@@ -33,11 +33,11 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'user'
 ], function ($router) {
-    Route::get('join/request/{lang}/{v}', 'UserController@make_join_request');
+    Route::post('join/request/{lang}/{v}', 'UserController@make_join_request');
     Route::get('select_my_data/{lang}/{v}', 'UserController@select_my_data');
     Route::get('get_account_types/{lang}/{v}', 'UserController@get_account_types');
     Route::get('get_specialties/{lang}/{v}', 'UserController@get_specialties');
-    Route::post('update_profile/{lang}/{v}', 'UserController@updateprofile');
+    Route::post('update_profile/{lang}/{v}', 'UserController@update_profile');
     Route::put('resetpassword/{lang}/{v}', 'UserController@resetpassword');
     Route::put('resetforgettenpassword/{lang}/{v}', 'UserController@resetforgettenpassword')->middleware('checkguest');
     Route::post('checkphoneexistance/{lang}/{v}', 'UserController@checkphoneexistance')->middleware('checkguest');

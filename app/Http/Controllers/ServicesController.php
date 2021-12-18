@@ -26,8 +26,8 @@ class ServicesController extends Controller
     public function details(Request $request , $id , $cat_id){
         $lang = $request->lang ;
         Session::put('api_lang', $lang);
-        
-        
+
+
         $prod_cat = [];
         $data['service_categories'] = SubCategory::where('category_id',$id)->select('id','title_'.$lang.' as title')
             ->orderBy('sort', 'asc')->get()->toArray();
@@ -52,11 +52,11 @@ class ServicesController extends Controller
         }
         array_unshift($data['service_categories'], $all);
         if($cat_id == 0){
-            $data['technicians'] = Product::where('category_id',$id)
+            $data['technicians'] = Product::where('category_id',$id)->where('publish','Y')
                 ->select('id','title_'.$lang.' as title','main_image as image','category_id')
                 ->get()->makeHidden(['Product_categories','Orders_accepted']);
         }else{
-            $technicians_data = Product_category::
+            $technicians_data = Product_category::whereHas('Product')->
             with('Product')->with('Category_data')
             ->where('cat_id',$cat_id)->get();
             foreach ($technicians_data as $key => $row){

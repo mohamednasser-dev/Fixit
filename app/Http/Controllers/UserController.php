@@ -29,7 +29,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['get_account_types', 'pay_sucess', 'pay_error', 'excute_pay', 'my_account', 'my_balance', 'resetforgettenpassword', 'checkphoneexistance', 'checkphoneexistanceandroid', 'getownerprofile']]);
+        $this->middleware('auth:api', ['except' => ['update_profile','get_account_types','make_join_request', 'pay_sucess', 'pay_error', 'excute_pay', 'my_account', 'my_balance', 'resetforgettenpassword', 'checkphoneexistance', 'checkphoneexistanceandroid', 'getownerprofile']]);
         //        --------------------------------------------- begin scheduled functions --------------------------------------------------------
         $expired = Product::where('status', 1)->whereDate('expiry_date', '<', Carbon::now())->get();
         foreach ($expired as $row) {
@@ -89,24 +89,28 @@ class UserController extends Controller
             return response()->json($response, 406);
         }
         if ($request->main_image != null) {
-            $image_name = $request->file('main_image')->getRealPath();
-            Cloudder::upload($image_name, null);
+            $image = $request->main_image;
+            Cloudder::upload("data:image/jpeg;base64," . $image, null);
             $imagereturned = Cloudder::getResult();
             $image_id = $imagereturned['public_id'];
             $image_format = $imagereturned['format'];
             $image_new_name = $image_id . '.' . $image_format;
             $data['main_image'] = $image_new_name;
+        }else{
+            $response = APIHelpers::createApiResponse(true, 406, 'you should choose image', 'يجب اختيار صورة', (object)[], $request->lang);
+            return response()->json($response, 406);
         }
-        $data['user_id'] = $user->id ;
-        $data['publish'] = 'Y';
+        $data['user_id'] = $user->id;
+        $data['publish'] = 'N';
         $data['password'] = Hash::make($request->password);
+        unset($data['categories']);
         $product = Product::create($data);
         foreach ($request->categories as $cat) {
             $data_cat['product_id'] = $product->id;
             $data_cat['cat_id'] = $cat;
             Product_category::create($data_cat);
         }
-        $response = APIHelpers::createApiResponse(false, 200, '', 'تم ارسال طلب الانضمام', $product, $request->lang);
+        $response = APIHelpers::createApiResponse(false, 200, 'Request sent successfully ,whait admin to accept your request', ' تم ارسال طلب الانضمام بنجاح , انتظر الادراره لقبول طلبك', $product, $request->lang);
         return response()->json($response, 200);
     }
 
@@ -209,7 +213,7 @@ class UserController extends Controller
 
     }
 
-    public function updateprofile(Request $request)
+    public function update_profile(Request $request)
     {
         $lang = $request->lang;
         Session::put('api_lang', $lang);
