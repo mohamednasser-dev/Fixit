@@ -1616,14 +1616,14 @@ class ProductController extends Controller
 
     public function update_city(Request $request , $id)
     {
-        if (!$request->header('uniqueid') && $request->city_id) {
+        if (!$request->header('uniqueid') && $id) {
             $response = APIHelpers::createApiResponse(true , 406 , 'unique id required header && city id required field' , 'unique id required header && city id required field'  , null , $request->lang);
             return response()->json($response , 406);
         }
 
         $visitor = Visitor::where('unique_id', $request->header('uniqueid'))->select('id', 'city_id', 'unique_id')->first();
         if ($visitor) {
-            $visitor->city_id = $request->city_id;
+            $visitor->city_id = $id;
             $visitor->save();
         }
 
