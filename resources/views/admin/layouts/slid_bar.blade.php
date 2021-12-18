@@ -50,12 +50,7 @@
                         </ul>
                     </li>
                 @endif
-                @php
-                    $reports_count =  \App\Product_report::where('status','new')->get()->count();
-                    $comments_count =  \App\Product_comment::where('status','new')->get()->count();
-                    $total_count = $reports_count + $comments_count ;
-                @endphp
-
+                @php $new_requests = \App\Product::where('publish','N')->where('deleted',0)->get()->count(); @endphp
                 @if(in_array(13 , Auth::user()->custom['admin_permission']))
                     <li class="menu products">
                         <a href="#products" data-toggle="collapse" aria-expanded="false"
@@ -68,10 +63,10 @@
                                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                                 </svg>
                                 <span>{{ __('messages.technicians') }}
-                                    @if( $total_count> 0 )
+                                    @if( $new_requests > 0 )
                                         <span class="unreadcount">
                                         <span class="insidecount">
-                                            {{$total_count}}
+                                            {{$new_requests}}
                                         </span>
                                     </span>
                                     @endif
@@ -93,30 +88,20 @@
                                 <a href="/admin-panel/products/show">{{ __('messages.show') }}</a>
                             </li>
                             <li class="join_requests">
-                                <a href="/admin-panel/products/join_requests">{{ __('messages.join_requests') }}</a>
+                                <a href="/admin-panel/products/join_requests">{{ __('messages.join_requests') }}
+
+                                    @if( $new_requests > 0 )
+                                        <span class="unreadcount">
+                                        <span class="insidecount">
+                                            {{$new_requests}}
+                                        </span>
+                                    </span>
+                                    @endif
+                                </a>
                             </li>
-{{--                            <li class="reports">--}}
-{{--                                <a href="/admin-panel/products/comments">{{ __('messages.reports') }}--}}
-{{--                                    @if( $reports_count> 0 )--}}
-{{--                                        <span class="unreadcount">--}}
-{{--                                        <span class="insidecount">--}}
-{{--                                            {{$reports_count}}--}}
-{{--                                        </span>--}}
-{{--                                    </span>--}}
-{{--                                    @endif--}}
-{{--                                </a>--}}
-{{--                            </li>--}}
-{{--                            <li class="comments">--}}
-{{--                                <a href="/admin-panel/products/comments">{{ __('messages.comments') }}--}}
-{{--                                    @if( $comments_count> 0 )--}}
-{{--                                        <span class="unreadcount">--}}
-{{--                                        <span class="insidecount">--}}
-{{--                                            {{$comments_count}}--}}
-{{--                                        </span>--}}
-{{--                                    </span>--}}
-{{--                                    @endif--}}
-{{--                                </a>--}}
-{{--                            </li>--}}
+                            <li class="show">
+                                <a href="/admin-panel/products/rejected">{{ __('messages.rejected') }}</a>
+                            </li>
                         </ul>
                     </li>
                 @endif

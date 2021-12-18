@@ -38,6 +38,11 @@ class ProductController extends AdminController
         $data['products'] = Product::where('deleted', 0)->where('publish','N')->orderBy('id', 'desc')->get();
         return view('admin.products.join_requests', ['data' => $data]);
     }
+    public function rejected()
+    {
+        $data['products'] = Product::where('deleted', 0)->where('publish','R')->orderBy('id', 'desc')->get();
+        return view('admin.products.join_requests', ['data' => $data]);
+    }
     public function acception($type, $id)
     {
         $data['publish'] = $type;
