@@ -235,8 +235,8 @@ Route::post('/visitor/create/{lang}/{v}', 'VisitorController@create')->middlewar
 
 
 // Cities
-Route::get('/product/cities/{lang}/{v}', 'ProductController@cities');
-Route::get('/product/update_city/{id}/{lang}/{v}', 'ProductController@update_city');
+Route::get('/product/cities/{lang}/{v}', 'ProductController@cities')->middleware('checkguest');
+Route::put('/product/update_city/{id}/{lang}/{v}', 'ProductController@update_city');
 Route::get('/ad/areas/{city_id}/{lang}/{v}', 'ProductController@areas');
 Route::get('/home/city_filter/{area_id}/{lang}/{v}', 'HomeController@city_filter')->middleware('checkguest');
 

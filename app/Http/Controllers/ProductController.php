@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\ContactUs;
-use App\Conversation;
+use App\Visitor;
 use App\Category_option;
 use App\Governorate;
 use App\Models\Student;
@@ -1592,38 +1592,43 @@ class ProductController extends Controller
 
     public function cities(Request $request)
     {
-        Session::put('api_lang', $request->lang);
-        $user = auth()->user();
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true, 406, 'you should login first', 'يجب تسجيل الدخول اولا', null, $request->lang);
-            return response()->json($response, 406);
-        }
-        $settings= User::where('id',$user->id)->select('city_id')->first();
+        // Session::put('api_lang', $request->lang);
+        // $user = auth()->user();
+        // if($user == null){
+        //     $response = APIHelpers::createApiResponse(true, 406, 'you should login first', 'يجب تسجيل الدخول اولا', null, $request->lang);
+        //     return response()->json($response, 406);
+        // }
+        // $settings= User::where('id',$user->id)->select('city_id')->first();
         $cities = Governorate::where('deleted', 0)
             ->select('id', 'title_'.$request->lang.' as title')
-            ->get()->map(function($data) use($settings){
-                if($settings->city_id == $data->id){
-                    $data->selected = true;
-                }else{
-                    $data->selected = false;
-                }
-                return $data;
-            });
+            ->get();
+            // ->map(function($data) use($settings){
+            //     if($settings->city_id == $data->id){
+            //         $data->selected = true;
+            //     }else{
+            //         $data->selected = false;
+            //     }
+            //     return $data;
+            // });
         $response = APIHelpers::createApiResponse(false, 200, '', '', $cities, $request->lang);
         return response()->json($response, 200);
     }
 
     public function update_city(Request $request , $id)
     {
-        $user = auth()->user();
-        if($user == null){
-            $response = APIHelpers::createApiResponse(true, 406, 'you should login first', 'يجب تسجيل الدخول اولا', null, $request->lang);
-            return response()->json($response, 406);
+        if (!$request->header('uniqueid') && $request->city_id) {
+            $response = APIHelpers::createApiResponse(true , 406 , 'unique id required header && city id required field' , 'unique id required header && city id required field'  , null , $request->lang);
+            return response()->json($response , 406);
         }
-        User::where('id',$user->id)->update(['city_id'=>$id]);
-        User::find($user->id);
-        $response = APIHelpers::createApiResponse(false, 200, 'updated successfully', 'تم التعديل بنجاح',null , $request->lang);
-        return response()->json($response, 200);
+
+        $visitor = Visitor::where('unique_id', $request->header('uniqueid'))->select('id', 'city_id', 'unique_id')->first();
+        if ($visitor) {
+            $visitor->city_id = $request->city_id;
+            $visitor->save();
+        }
+
+        $response = APIHelpers::createApiResponse(false , 200 , '' , '' , $visitor , $request->lang);
+        return response()->json($response , 200);
     }
 
     public function areas( Request $request , $city_id )
