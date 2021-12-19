@@ -71,5 +71,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo('App\Account_type', 'account_type')->select('id','name_'.session('api_lang').' as name','type');
     }
 
-    
+    public function prods() {
+        return $this->hasMany('App\Product', 'user_id')->where('publish', 'Y');
+    }
 }

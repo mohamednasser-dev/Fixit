@@ -900,9 +900,10 @@ class UserController extends Controller
         $user = auth()->user();
         
         $isTechnician = false;
-        if (count($user->products) > 0) {
+        if (count($user->prods) > 0) {
             $isTechnician = true;
         }
+        // dd($user);
         $data['is_technician'] = $isTechnician;
         $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
         return response()->json($response, 200);
