@@ -102,7 +102,7 @@ class UserController extends Controller
         }
         $data['user_id'] = $user->id;
         $data['publish'] = 'N';
-        $data['technician'] = 1;
+        // $data['technician'] = 1;
         $data['password'] = Hash::make($request->password);
         unset($data['categories']);
         $product = Product::create($data);
