@@ -102,6 +102,7 @@ class UserController extends Controller
         }
         $data['user_id'] = $user->id;
         $data['publish'] = 'N';
+        $data['technician'] = 1;
         $data['password'] = Hash::make($request->password);
         unset($data['categories']);
         $product = Product::create($data);
@@ -895,5 +896,16 @@ class UserController extends Controller
         return "Please wait success ...";
     }
 
+    public function isTechnician(Request $request) {
+        $user = auth()->user();
+        
+        $isTechnician = false;
+        if (count($user->products) > 0) {
+            $isTechnician = true;
+        }
+        $data['is_technician'] = $isTechnician;
+        $response = APIHelpers::createApiResponse(false, 200, '', '', $data, $request->lang);
+        return response()->json($response, 200);
+    }
 
 }

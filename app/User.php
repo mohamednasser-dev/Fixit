@@ -70,4 +70,6 @@ class User extends Authenticatable implements JWTSubject
     public function Account_type() {
         return $this->belongsTo('App\Account_type', 'account_type')->select('id','name_'.session('api_lang').' as name','type');
     }
+
+    
 }

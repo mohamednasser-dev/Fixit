@@ -34,6 +34,8 @@ Route::group([
     'prefix' => 'user'
 ], function ($router) {
     Route::post('join/request/{lang}/{v}', 'UserController@make_join_request');
+    
+    Route::get('is-technician/{lang}/{v}', 'UserController@isTechnician');
     Route::get('select_my_data/{lang}/{v}', 'UserController@select_my_data');
     Route::get('get_account_types/{lang}/{v}', 'UserController@get_account_types');
     Route::get('get_specialties/{lang}/{v}', 'UserController@get_specialties');
