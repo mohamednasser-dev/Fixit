@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Account_type;
+use App\Visitor;
 use App\Order;
 use App\Participant;
 use App\specialty;
@@ -30,7 +30,16 @@ class TechnicianController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'select_my_data', 'update_profile', 'my_orders', 'change_status']]);
+        $this->middleware('auth:api', ['except' => ['login', 'select_my_data', 'update_profile', 'my_orders', 'change_status', 'change_order_status']]);
+    }
+
+    protected function respondWithToken($token)
+    {
+        return [
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 432000
+        ];
     }
 
     public function login(Request $request)
@@ -80,6 +89,28 @@ class TechnicianController extends Controller
         $data = Order::where('product_id', $user->id)->where('id', $order_id)->first();
         if ($data) {
             Order::where('product_id', $user->id)->where('id', $order_id)->update(['status' => $status]);
+        }
+        $visitor = Visitor::where('unique_id', $request->header('uniqueid'))->pluck('fcm_token')->toArray();
+        $title = 'Order status';
+        if ($status == 'accept') {
+            $body = 'Order accepted';
+            $notifications = APIHelpers::send_notification($title , $body , '' , null , $visitor);
+        }else {
+            $body = 'Order rejected';
+            $notifications = APIHelpers::send_notification($title , $body , '' , null , $visitor);
+        }
+
+        if ($notifications) {
+            $thisVisitor = $visitor = Visitor::where('unique_id', $request->header('uniqueid'))->select('id')->first();
+            $notification = new Notification();
+            $notification->title = $title;
+            $notification->body = $body;
+            $notification->save();
+            $user_notification = new UserNotification();
+            $user_notification->user_id = $user->id;
+            $user_notification->notification_id = $notification->id;
+            $user_notification->visitor_id = $thisVisitor->id;
+            $user_notification->save();
         }
         $response = APIHelpers::createApiResponse(false, 200, 'order status changes successfully', 'تم تغير حالة الطلب بنجاح', null, $lang);
         return response()->json($response, 200);

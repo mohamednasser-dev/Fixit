@@ -18,12 +18,15 @@ use App\SubTwoCategory;
 use App\ProductImage;
 use App\Plan_details;
 use App\SubCategory;
-use Carbon\Carbon;
+use App\Helpers\APIHelpers;
+use App\UserNotification;
+use App\Notification;
 use App\Category;
 use App\Product;
 use App\Setting;
 use App\Plan;
 use App\User;
+use App\Visitor;
 
 class ProductController extends AdminController
 {
@@ -46,7 +49,32 @@ class ProductController extends AdminController
     public function acception($type, $id)
     {
         $data['publish'] = $type;
-        Product::where('id', $id)->update($data);
+        $technician = Product::where('id', $id)->first();
+        $technician->update($data);
+        $visitors = Visitor::where('user_id', $technician->user_id)->where('fcm_token', '!=', null)->select('fcm_token')->pluck("fcm_token")->toArray();
+        $title = 'Technician request';
+        if ($type == "Y") {
+            $body = 'Your Technician request has confirmed';
+            $notifications = APIHelpers::send_notification($title , $body , '' , null , $visitors);
+        }else {
+            $body = 'Your Technician request has rejected';
+            $notifications = APIHelpers::send_notification($title , $body , '' , null , $visitors);
+        }
+        if ($notifications) {
+            $notification = new Notification();
+            $notification->title = $title;
+            $notification->body = $body;
+            $notification->save();
+            $users = Visitor::select('id','fcm_token','user_id')->where('user_id', $technician->user_id)->where('fcm_token' ,'!=' , null)->get();
+            for($i =0; $i < count($users); $i++){
+                $user_notification = new UserNotification();
+                $user_notification->user_id = $technician->user_id;
+                $user_notification->notification_id = $notification->id;
+                $user_notification->visitor_id = $users[$i]['id'];
+                $user_notification->save();
+            }
+        }
+        
         session()->flash('success', trans('messages.status_changed'));
         return back();
     }
