@@ -71,6 +71,7 @@ class ServicesController extends Controller
                 $prod_cat[$key]['category_id'] = $row->Product->category_id ;
                 $prod_cat[$key]['specialties'] = $row->Product->specialties ;
                 $prod_cat[$key]['done_orders'] = $row->Product->done_orders ;
+                $prod_cat[$key]['rate'] = $row->Product->rate ;
             }
             $data['technicians'] = $prod_cat ;
         }
