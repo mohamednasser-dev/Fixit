@@ -29,7 +29,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['update_profile','get_account_types','make_join_request', 'pay_sucess', 'pay_error', 'excute_pay', 'my_account', 'my_balance', 'resetforgettenpassword', 'checkphoneexistance', 'checkphoneexistanceandroid', 'getownerprofile']]);
+        $this->middleware('auth:api', ['except' => ['update_profile','get_account_types','make_join_request', 'pay_sucess', 'pay_error', 'excute_pay', 'my_account', 'my_balance', 'resetforgettenpassword', 'checkphoneexistance', 'checkphoneexistanceandroid', 'getownerprofile', 'isTechnician']]);
         //        --------------------------------------------- begin scheduled functions --------------------------------------------------------
         $expired = Product::where('status', 1)->whereDate('expiry_date', '<', Carbon::now())->get();
         foreach ($expired as $row) {
@@ -897,10 +897,10 @@ class UserController extends Controller
     }
 
     public function isTechnician(Request $request) {
-        $user = auth()->user();
+        $user = auth()->guard('tech')->user();
         
         $isTechnician = false;
-        if (count($user->prods) > 0) {
+        if ($user != null) {
             $isTechnician = true;
         }
         // dd($user);
