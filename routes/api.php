@@ -118,7 +118,7 @@ Route::get('/products/last-level/{sub_category_id}/{lang}/{v}', 'CategoryControl
 Route::get('/home/{lang}/{v}', 'HomeController@gethome')->middleware('checkguest');
 
 // get home data
-Route::get('/home/main_page/{lang}/{v}', 'HomeController@main_page')->middleware('checkguest');
+Route::get('/home/main_page/{lang}/{v}', 'HomeController@main_page');
 Route::get('/home/offers/{lang}/{v}', 'HomeController@offers')->middleware('checkguest');
 
 //orders routes ..

@@ -90,18 +90,18 @@ class TechnicianController extends Controller
         if ($data) {
             Order::where('product_id', $user->id)->where('id', $order_id)->update(['status' => $status]);
         }
-        $visitor = Visitor::where('unique_id', $request->header('uniqueid'))->pluck('fcm_token')->toArray();
+        $visitor = Visitor::where('user_id', $data->user_id)->latest('updated_at')->select('id', 'fcm_token')->first();
+        
         $title = 'Order status';
         if ($status == 'accept') {
             $body = 'Order accepted';
-            $notifications = APIHelpers::send_notification($title , $body , '' , null , $visitor);
+            $notifications = APIHelpers::send_notification($title , $body , '' , null , [$visitor->fcm_token]);
         }else {
             $body = 'Order rejected';
-            $notifications = APIHelpers::send_notification($title , $body , '' , null , $visitor);
+            $notifications = APIHelpers::send_notification($title , $body , '' , null , [$visitor->fcm_token]);
         }
 
         if ($notifications) {
-            $thisVisitor = $visitor = Visitor::where('unique_id', $request->header('uniqueid'))->select('id')->first();
             $notification = new Notification();
             $notification->title = $title;
             $notification->body = $body;
@@ -109,7 +109,7 @@ class TechnicianController extends Controller
             $user_notification = new UserNotification();
             $user_notification->user_id = $user->id;
             $user_notification->notification_id = $notification->id;
-            $user_notification->visitor_id = $thisVisitor->id;
+            $user_notification->visitor_id = $visitor->id;
             $user_notification->save();
         }
         $response = APIHelpers::createApiResponse(false, 200, 'order status changes successfully', 'تم تغير حالة الطلب بنجاح', null, $lang);

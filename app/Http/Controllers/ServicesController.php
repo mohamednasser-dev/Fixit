@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use App\Helpers\APIHelpers;
+use App\Visitor;
+
 use function foo\func;
 
 class ServicesController extends Controller
@@ -24,59 +26,69 @@ class ServicesController extends Controller
     }
 
     public function details(Request $request , $id , $cat_id){
+        if (!$request->header('uniqueid') && $id) {
+            $response = APIHelpers::createApiResponse(true , 406 , 'unique id required header && city id required field' , 'unique id required header && city id required field'  , null , $request->lang);
+            return response()->json($response , 406);
+        }
+        $visitor = Visitor::where('unique_id', $request->header('uniqueid'))->select('city_id')->first();
         $lang = $request->lang ;
         Session::put('api_lang', $lang);
-
-
-        $prod_cat = [];
-        $data['service_categories'] = SubCategory::where('category_id',$id)->select('id','title_'.$lang.' as title')
-            ->orderBy('sort', 'asc')->get()->toArray();
-        for ($i = 0; $i < count($data['service_categories']); $i++) {
-            if($cat_id == $data['service_categories'][$i]['id']){
-                $data['service_categories'][$i]['selected'] = true ;
-            }else{
-                $data['service_categories'][$i]['selected'] = false ;
-            }
-        }
-        $title = 'All';
-        if ($lang == 'ar') {
-            $title = 'الكل';
-        }
-        $all = new \StdClass;
-        $all->id = 0;
-        $all->title = $title;
-        if($cat_id == 0){
-            $all->selected = true;
-        }else{
-            $all->selected = false;
-        }
-        array_unshift($data['service_categories'], $all);
-        if($cat_id == 0){
-            $data['technicians'] = Product::where('category_id',$id)->where('publish','Y')
-                ->select('id','title_'.$lang.' as title','main_image as image','category_id')
-                ->get()->makeHidden(['Product_categories','Orders_accepted']);
-        }else{
-            $technicians_data = Product_category::whereHas('Product')->
-            with('Product')->with('Category_data')
-            ->where('cat_id',$cat_id)->get();
-            foreach ($technicians_data as $key => $row){
-                $prod_cat[$key]['id'] = $row->product_id ;
-                if($lang == 'ar'){
-                    $prod_cat[$key]['title'] = $row->Product->title_ar ;
+        
+        if ($visitor) {
+            $prod_cat = [];
+            $data['service_categories'] = SubCategory::where('category_id',$id)->select('id','title_'.$lang.' as title')
+                ->orderBy('sort', 'asc')->get()->toArray();
+            for ($i = 0; $i < count($data['service_categories']); $i++) {
+                if($cat_id == $data['service_categories'][$i]['id']){
+                    $data['service_categories'][$i]['selected'] = true ;
                 }else{
-                    $prod_cat[$key]['title'] = $row->Product->title_en ;
+                    $data['service_categories'][$i]['selected'] = false ;
                 }
-
-                $prod_cat[$key]['image'] = $row->Product->main_image ;
-                $prod_cat[$key]['category_id'] = $row->Product->category_id ;
-                $prod_cat[$key]['specialties'] = $row->Product->specialties ;
-                $prod_cat[$key]['done_orders'] = $row->Product->done_orders ;
-                $prod_cat[$key]['rate'] = $row->Product->rate ;
             }
-            $data['technicians'] = $prod_cat ;
+            $title = 'All';
+            if ($lang == 'ar') {
+                $title = 'الكل';
+            }
+            $all = new \StdClass;
+            $all->id = 0;
+            $all->title = $title;
+            if($cat_id == 0){
+                $all->selected = true;
+            }else{
+                $all->selected = false;
+            }
+            array_unshift($data['service_categories'], $all);
+            if($cat_id == 0){
+                $data['technicians'] = Product::where('category_id',$id)->where('city_id', $visitor->city_id)->where('publish','Y')
+                    ->select('id','title_'.$lang.' as title','main_image as image','category_id')
+                    ->get()->makeHidden(['Product_categories','Orders_accepted']);
+            }else{
+                $technicians_data = Product_category::whereHas('Product', function ($q) use ($visitor) {
+                    $q->where('city_id', $visitor->city_id);
+                })->with('Product')->with('Category_data')
+                ->where('cat_id',$cat_id)->get();
+                foreach ($technicians_data as $key => $row){
+                    $prod_cat[$key]['id'] = $row->product_id ;
+                    if($lang == 'ar'){
+                        $prod_cat[$key]['title'] = $row->Product->title_ar ;
+                    }else{
+                        $prod_cat[$key]['title'] = $row->Product->title_en ;
+                    }
+    
+                    $prod_cat[$key]['image'] = $row->Product->main_image ;
+                    $prod_cat[$key]['category_id'] = $row->Product->category_id ;
+                    $prod_cat[$key]['specialties'] = $row->Product->specialties ;
+                    $prod_cat[$key]['done_orders'] = $row->Product->done_orders ;
+                    $prod_cat[$key]['rate'] = $row->Product->rate ;
+                }
+                $data['technicians'] = $prod_cat ;
+            }
+            $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
+            return response()->json($response , 200);
+        }else {
+            $response = APIHelpers::createApiResponse(true , 406 , 'visitor is not exist' , 'زائر غير موجود'  , null , $request->lang);
+            return response()->json($response , 406);
         }
-        $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
-        return response()->json($response , 200);
     }
 
     public function technician_details(Request $request , $id){
