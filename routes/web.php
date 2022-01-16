@@ -59,6 +59,8 @@ Route::group(['middleware'=>'language','prefix' => "admin-panel",'namespace' => 
     Route::group(['prefix' => 'app_pages' ] , function($router){
         Route::get('aboutapp' , 'AppPagesController@GetAboutApp');
         Route::post('aboutapp' , 'AppPagesController@PostAboutApp');
+        Route::get('commission' , 'AppPagesController@GetCommission');
+        Route::post('commission' , 'AppPagesController@PostCommission');
         Route::get('termsandconditions' , 'AppPagesController@GetTermsAndConditions');
         Route::post('termsandconditions' , 'AppPagesController@PostTermsAndConditions')->name('save.terms');
     });
@@ -360,6 +362,7 @@ Route::group([
     'prefix' => "webview"
 ] , function($router){
     Route::get('aboutapp/{lang}' , 'WebViewController@getabout');
+    Route::get('commission/{lang}' , 'WebViewController@getcommission');
     Route::get('termsandconditions/{lang}' , 'WebViewController@gettermsandconditions' );
 });
 Route::get('/' ,'WebViewController@homePage');

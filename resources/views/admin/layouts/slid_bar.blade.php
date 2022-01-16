@@ -286,6 +286,9 @@
                             <li class="termsandconditions">
                                 <a href="/admin-panel/app_pages/termsandconditions">{{ __('messages.terms_conditions') }}</a>
                             </li>
+                            <li class="commission">
+                                <a href="/admin-panel/app_pages/commission">{{ __('messages.commission') }}</a>
+                            </li>
                         </ul>
                     </li>
                 @endif

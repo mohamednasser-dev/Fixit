@@ -345,5 +345,6 @@ return [
     "upload_main_image" => "رفع الصورة الرئيسية",
     "product_images" => "صور اعلان المستخدم",
     "show_buy" => "اظهار الشراء",
+    "commission" => "حساب وسداد عمولة الموقع"
 ];
 ?>

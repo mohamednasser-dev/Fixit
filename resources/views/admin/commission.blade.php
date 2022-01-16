@@ -1,6 +1,6 @@
 @extends('admin.app')
 
-@section('title' , __('messages.about_app'))
+@section('title' , __('messages.commission'))
 
 @section('content')
 
@@ -11,7 +11,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>{{ __('messages.about_app') }}</h4>
+                    <h4>{{ __('messages.commission') }}</h4>
              </div>
         </div>
         @if (session('status'))
@@ -24,11 +24,11 @@
             @csrf
              <h5>{{ __('messages.arabic') }}</h5>
             <div class="form-group mb-4 arabic-direction">
-                <textarea id="editor-ck-ar" name="aboutapp_ar" required  class="form-control"  rows="5">{{ $data['setting']['aboutapp_ar'] }}</textarea>
+                <textarea id="editor-ck-ar" name="commission_ar" required  class="form-control"  rows="5">{{ $data['setting']['commission_ar'] }}</textarea>
             </div>
             <h5>{{ __('messages.english') }}</h5>
             <div class="form-group mb-4 arabic-direction">
-                <textarea id="editor-ck-en" name="aboutapp_en" required  class="form-control"  rows="5">{{ $data['setting']['aboutapp_en'] }}</textarea>
+                <textarea id="editor-ck-en" name="commission_en" required  class="form-control"  rows="5">{{ $data['setting']['commission_en'] }}</textarea>
             </div>
             <input type="submit" value="{{ __('messages.edit') }}" class="btn btn-primary">
         </form>

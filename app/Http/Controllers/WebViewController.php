@@ -15,6 +15,12 @@ class WebViewController extends Controller
         return view('webview.about' , ['data' => $data]);
     }
 
+    public function getcommission(Request $request, $lang) {
+        $data = Setting::where('id', 1)->select('commission_' . $lang . ' as commission')->first();
+        $data['lang'] = $lang;
+        return view('webview.commission' , ['data' => $data]);
+    }
+
     // get terms and conditions
     public function gettermsandconditions(Request $request, $lang){
         $setting = Setting::find(1);

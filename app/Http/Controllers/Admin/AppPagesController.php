@@ -31,6 +31,19 @@ class AppPagesController extends AdminController{
         return view('admin.commission' , ['data' => $data]);
     }
 
+    // post about app edit page
+    public function PostCommission(Request $request){
+        if(!$request->commission_ar){
+            return redirect('admin-panel/app_pages/commission')->with('status' , 'About App Text in Arabic Required');
+        }
+        $setting = Setting::where('id', 1)->select('id', 'commission_en', 'commission_ar')->first();
+        $setting->commission_ar = $request->commission_ar;
+        $setting->commission_en = $request->commission_en;
+        // return $setting;
+        $setting->save();
+        return redirect('admin-panel/app_pages/commission');
+    }
+
     // get Terms And Conditions edit page
     public function GetTermsAndConditions(){
         $data['setting'] = Setting::find(1);

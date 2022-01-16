@@ -349,7 +349,8 @@
         "main_image" => "Technician Image",
         "upload_main_image" => "Upload Main Image",
         "product_images" => "Technician Images",
-					"show_buy" => "Show Buy Button",
+        "show_buy" => "Show Buy Button",
+        "commission" => "Commission Calculation"
 
     ];
 ?>
