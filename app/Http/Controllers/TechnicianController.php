@@ -187,7 +187,7 @@ class TechnicianController extends Controller
             $response = APIHelpers::createApiResponse(true, 406, 'you should login first', 'يجب تسجيل الدخول اولا', (object)[], $request->lang);
             return response()->json($response, 406);
         }
-        $order = Order::with(['Address'])->select('id', 'product_id', 'status', 'visit_date', 'visit_time', 'address_id')
+        $order = Order::with(['Address'])->with('user')->select('id', 'product_id', 'status', 'visit_date', 'visit_time', 'address_id', 'user_id', 'price')
             ->with('Product')->where('product_id', $user->id)->get()->makeHidden(['Product_categories']);
 
         $response = APIHelpers::createApiResponse(false, 200, '', '', $order, $request->lang);

@@ -16,6 +16,10 @@ class Order extends Model
         return $this->belongsTo('App\UserAddress', 'address_id')->with('area');
     }
 
+    public function user() {
+        return $this->belongsTo('App\User', 'user_id')->select("id", "name");
+    }
+
     public function  getVisitTimeAttribute($data){
         return Carbon::createFromFormat('H:i:s', $data)->format('g:i a');
     }

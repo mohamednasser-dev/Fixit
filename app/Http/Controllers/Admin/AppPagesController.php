@@ -25,6 +25,12 @@ class AppPagesController extends AdminController{
         return redirect('admin-panel/app_pages/aboutapp');
     }
 
+    // get commission edit page
+    public function GetCommission(){
+        $data['setting'] = Setting::where('id', 1)->select('id', 'commission_en', 'commission_ar')->first();
+        return view('admin.commission' , ['data' => $data]);
+    }
+
     // get Terms And Conditions edit page
     public function GetTermsAndConditions(){
         $data['setting'] = Setting::find(1);

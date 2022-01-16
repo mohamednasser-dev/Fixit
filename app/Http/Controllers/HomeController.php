@@ -10,7 +10,7 @@ use App\Balance_package;
 use App\SubTwoCategory;
 use App\ProductImage;
 use App\Participant;
-use App\SubCategory;
+use App\Visitor;
 use Carbon\Carbon;
 use App\Favorite;
 use App\Category;
@@ -64,9 +64,16 @@ class HomeController extends Controller
 
     public function main_page(Request $request)
     {
+        if (!$request->header('uniqueid')) {
+            $response = APIHelpers::createApiResponse(true , 406 , 'unique id required header' , 'unique id required header'  , null , $request->lang);
+            return response()->json($response , 406);
+        }
+        $visitor = Visitor::where('unique_id', $request->header('uniqueid'))->select('city_id')->first();
         $lang = $request->lang;
         $data['slider'] = Ad::select('id', 'image', 'type', 'content')->where('place', 1)->get();
-        $products = Category::where('deleted', 0)->select('id', 'title_' . $lang . ' as title', 'image')
+        $products = Category::whereHas('products', function ($q) use ($visitor) {
+            $q->where('city_id', $visitor->city_id);
+        })->where('deleted', 0)->select('id', 'title_' . $lang . ' as title', 'image', 'deleted')
             ->orderBy('sort', 'asc')->get();
         $new_ad = [];
         $ad_data = [];
