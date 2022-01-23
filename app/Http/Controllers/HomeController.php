@@ -71,7 +71,7 @@ class HomeController extends Controller
         $visitor = Visitor::where('unique_id', $request->header('uniqueid'))->select('city_id')->first();
         $lang = $request->lang;
         $data['slider'] = Ad::select('id', 'image', 'type', 'content')->where('place', 1)->get();
-        $products = Category::has('products', '>', 0)->where('deleted', 0)->select('id', 'title_' . $lang . ' as title', 'image', 'deleted')
+        $products = Category::where('deleted', 0)->select('id', 'title_' . $lang . ' as title', 'image', 'deleted')
             ->orderBy('sort', 'asc')->get();
         $new_ad = [];
         $ad_data = [];
