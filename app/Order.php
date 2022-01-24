@@ -9,7 +9,7 @@ class Order extends Model
 {
     protected $guarded = [];
     public function Product() {
-        return $this->belongsTo('App\Product', 'product_id')->select('id','main_image as image','status','title_'.session('api_lang').' as title');
+        return $this->belongsTo('App\Product', 'product_id')->select('id','main_image as image','status','title_'.session('api_lang').' as title', 'phone');
     }
 
     public function Address() {
