@@ -97,7 +97,7 @@ class ServicesController extends Controller
         Session::put('api_lang', $lang);
 
         $data['technicians'] = Product::where('id',$id)->with('Specialities_data')
-            ->select('id','price','title_'.$lang.' as title','description_'.$lang.' as description','main_image as image')
+            ->select('id','price','title_'.$lang.' as title','description_'.$lang.' as description','main_image as image', 'phone')
             ->first()->makeHidden(['Product_categories','specialties','Orders_accepted']);
         $response = APIHelpers::createApiResponse(false , 200 ,  '', '' , $data, $request->lang );
         return response()->json($response , 200);
