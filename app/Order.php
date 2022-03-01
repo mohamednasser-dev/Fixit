@@ -13,7 +13,8 @@ class Order extends Model
     }
 
     public function Address() {
-        return $this->belongsTo('App\UserAddress', 'address_id')->with('area');
+        
+        return $this->belongsTo('App\UserAddress', 'address_id')->with('area')->withDefault(["area" => (object)[]]);
     }
 
     public function user() {
