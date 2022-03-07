@@ -18,7 +18,7 @@ class Order extends Model
     }
 
     public function user() {
-        return $this->belongsTo('App\User', 'user_id')->select("id", "name");
+        return $this->belongsTo('App\User', 'user_id')->select("id", "name", "image");
     }
 
     public function  getVisitTimeAttribute($data){
